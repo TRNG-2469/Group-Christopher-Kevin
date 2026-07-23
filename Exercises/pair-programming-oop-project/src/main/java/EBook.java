@@ -16,6 +16,7 @@ public class EBook extends Book implements Borrowable{
     @Override
     public void borrowItem() {
         this.isBorrowed = true;
+        downloadBook(this.fileSizeMB);
     }
 
     @Override
