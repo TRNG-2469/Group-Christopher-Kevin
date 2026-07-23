@@ -10,7 +10,7 @@ public class Ebook extends Book implements Borrowable{
 
     @Override
     public java.lang.String toString() {
-        return "[BOOK] Title: " + getTitle() + " | Author: " + getAuthor() + " | File Size: " + this.fileSizeMB + " MB";
+        return super.toString() + " | File Size: " + this.fileSizeMB + " MB";
     }
 
     @Override

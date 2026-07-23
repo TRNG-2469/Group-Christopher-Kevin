@@ -1,5 +1,5 @@
-## Initial Code
-```
+## Round 1: Initial Code
+```java
 public class Book {
 private String title;
 private String author;
@@ -58,3 +58,55 @@ protected boolean isBorrowed;
 - We ignored making isBorrowed private as making it protected is part of the specifications
 - We kept the default constructor.
 - The specifications did not mention a need to be comparing books between each other, so an equals method was unnecessary.
+
+### Round 2: Initial Code
+```java
+public class Ebook extends Book implements Borrowable{
+    private double fileSizeMB;
+
+    public Ebook() {}
+
+    public Ebook(String title, String author, double fileSizeMB) {
+        super(title, author);
+        this.fileSizeMB = fileSizeMB;
+    }
+
+    @Override
+    public java.lang.String toString() {
+        return super.toString() + " | File Size: " + this.fileSizeMB + " MB";
+    }
+
+    @Override
+    public void borrowItem() {
+        this.isBorrowed = true;
+    }
+
+    @Override
+    public void returnItem() {
+        this.isBorrowed = false;
+    }
+}
+```
+### AI Prompt
+- Write a method downloadBook that simulates a 2-second delay using Thread.sleep. Constrain the input size to be positive. Use standard try-catch blocks for interruption.
+
+### AI Response
+```java
+public void downloadBook(double sizeMB) {
+    if (sizeMB <= 0) {
+        throw new IllegalArgumentException("sizeMB must be positive");
+    }
+    System.out.println("Starting download of " + sizeMB + " MB...");
+    try {
+        Thread.sleep(2000);
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        System.out.println("Download interrupted");
+        return;
+    }
+    System.out.println("Download complete");
+}
+```
+
+### Analysis
+- The method downloadBook is implemented correctly with a positive size constraint and a 2-second delay.
