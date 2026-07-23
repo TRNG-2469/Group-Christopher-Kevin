@@ -1,9 +1,9 @@
-public class Ebook extends Book implements Borrowable{
+public class EBook extends Book implements Borrowable{
     private double fileSizeMB;
 
-    public Ebook() {}
+    public EBook() {}
 
-    public Ebook(String title, String author, double fileSizeMB) {
+    public EBook(String title, String author, double fileSizeMB) {
         super(title, author);
         this.fileSizeMB = fileSizeMB;
     }
