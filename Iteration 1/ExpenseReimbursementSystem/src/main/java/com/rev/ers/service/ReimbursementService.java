@@ -1,4 +1,4 @@
-package com.rev.ers;
+package com.rev.ers.service;
 
 public class ReimbursementService {
 }
