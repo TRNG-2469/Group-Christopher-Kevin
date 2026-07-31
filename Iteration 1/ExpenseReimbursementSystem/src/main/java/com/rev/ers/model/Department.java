@@ -1,5 +1,7 @@
 package com.rev.ers.model;
 
+import java.util.Objects;
+
 public class Department {
     private int id;
     private String name;
@@ -33,5 +35,16 @@ public class Department {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Department that)) return false;
+        return getId() == that.getId() && Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName());
     }
 }
