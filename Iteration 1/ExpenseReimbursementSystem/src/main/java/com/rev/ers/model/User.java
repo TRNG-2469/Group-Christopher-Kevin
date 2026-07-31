@@ -2,6 +2,8 @@ package com.rev.ers.model;
 
 import com.rev.ers.enums.Role;
 
+import java.util.Objects;
+
 public abstract class User {
     private int user_id;
     private String username;
@@ -77,5 +79,36 @@ public abstract class User {
 
     public void setDepartment_id(int department_id) {
         this.department_id = department_id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_id=" + user_id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role=" + role +
+                ", department_id=" + department_id +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof User user)) return false;
+        return getUser_id() == user.getUser_id() &&
+                getDepartment_id() == user.getDepartment_id() &&
+                Objects.equals(getUsername(), user.getUsername()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getFirstName(), user.getFirstName()) &&
+                Objects.equals(getLastName(), user.getLastName()) &&
+                getRole() == user.getRole();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUser_id(), getUsername(), getPassword(),
+                getFirstName(), getLastName(), getRole(), getDepartment_id());
     }
 }
