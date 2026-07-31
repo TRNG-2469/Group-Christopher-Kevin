@@ -6,11 +6,9 @@ import java.util.List;
 
 public interface ReimbursementDAO {
     // CRUD operations
-    void create(Reimbursement employee);
-    void update(Reimbursement employee);
-    void delete(int id);
+    void create(Reimbursement reimbursement);
+    void update(Reimbursement reimbursement);
 
-    // Read All, Read One
-    Reimbursement findByID(int id);
+    Reimbursement findByAuthor(int id);
     List<Reimbursement> findAll();
 }
