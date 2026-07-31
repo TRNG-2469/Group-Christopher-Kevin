@@ -1,4 +1,4 @@
 package com.rev.ers.repo;
 
-public class ReimbursementDAO {
+public interface ReimbursementDAO {
 }

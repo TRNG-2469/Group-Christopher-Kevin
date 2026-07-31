@@ -1,4 +1,4 @@
 package com.rev.ers.repo;
 
-public class DepartmentDAO {
+public interface DepartmentDAO {
 }

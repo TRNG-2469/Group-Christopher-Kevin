@@ -13,7 +13,4 @@ public enum Role {
     public String getDbValue() {
         return dbValue;
     }
-
-    // For Christopher
-    // stmt.setString(2, user.getRole().getDbValue());
 }
