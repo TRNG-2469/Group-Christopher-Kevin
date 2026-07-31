@@ -37,6 +37,7 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- For JSON serialization/deserialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -44,6 +45,7 @@
             <type>jar</type>
         </dependency>
 
+        <!-- For reading environment variables from a .env file -->
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>java-dotenv</artifactId>
