@@ -22,20 +22,17 @@ public class UserDAOImp implements UserDAO {
 
             try (ResultSet result = prep.executeQuery()){
                 while(result.next()){
+                    int user_id = result.getInt(1);
+                    String user = result.getString(2);
+                    String pass = result.getString(3);
+                    String firstName = result.getString(4);
+                    String lastName = result.getString(5);
+                    int deptID = result.getInt(7);
+
                     if(result.getString(6).equals("manager")){
-                        return new Manager(result.getInt(1), // user id
-                            result.getString(2), // username
-                            result.getString(3), // password
-                            result.getString(4), // first name
-                            result.getString(5), // last name
-                            result.getInt(7)); // dept id
+                        return new Manager(user_id, user, pass, firstName, lastName, deptID);
                     } else {
-                        return new Employee(result.getInt(1), // user id
-                            result.getString(2), // username
-                            result.getString(3), // password
-                            result.getString(4), // first name
-                            result.getString(5), // last name
-                            result.getInt(7)); // dept id
+                        return new Employee(user_id, user, pass, firstName, lastName, deptID);
                     }
                 }
                 return null;
