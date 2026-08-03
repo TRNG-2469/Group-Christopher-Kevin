@@ -1,12 +1,32 @@
 package com.rev.ers.service;
 
 import com.rev.ers.model.Reimbursement;
+import com.rev.ers.repo.ReimbursementDAO;
+import com.rev.ers.repo.ReimbursementDAOImp;
+
 import java.util.List;
 
 public class ReimbursementServiceImp implements ReimbursementService{
     @Override
     public void create(Reimbursement reimbursement) {
+        ReimbursementDAO DAO = new ReimbursementDAOImp();
+        if(reimbursement.getReimbursement_id() > 0){
+            throw new IllegalArgumentException("Reimbursement ID cannot be negative.");
 
+        } else if(reimbursement.getAmount() > 0.0){
+            throw new IllegalArgumentException("Reimbursement amount cannot be negative.");
+
+        } else if(reimbursement.getDescription() == null || reimbursement.getDescription().isEmpty()){
+            throw new IllegalArgumentException("Description cannot be empty.");
+
+        } else if(reimbursement.getType() == null || reimbursement.getStatus() == null){
+            throw new IllegalArgumentException("Type and status cannot be null.");
+
+        } else if(reimbursement.getAuthor_id() > 0 || reimbursement.getResolver_id() > 0){
+            throw new IllegalArgumentException("Author or Resolver ID cannot be negative.");
+        }
+
+        DAO.create(reimbursement);
     }
 
     @Override
