@@ -102,7 +102,6 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
                 Reimbursement reimbursement = new Reimbursement(reimbursementID, amount, description, type, status, author, resolver);
                 allReimbs.add(reimbursement);
             }
-
             return allReimbs;
 
         } catch(SQLException e){
