@@ -1,4 +1,4 @@
 package com.rev.ers.controller;
 
-public class ReimbursementHandler {
+public interface ReimbursementHandler {
 }

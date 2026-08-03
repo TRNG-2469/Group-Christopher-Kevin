@@ -1,4 +1,4 @@
 package com.rev.ers.controller;
 
-public interface UserHandler {
+public class UserHandlerImpl {
 }
