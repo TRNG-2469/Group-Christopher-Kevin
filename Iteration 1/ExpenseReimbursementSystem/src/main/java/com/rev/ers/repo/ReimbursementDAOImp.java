@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReimbursementDAOImp implements ReimbursementDAO{
+    public ReimbursementDAOImp() {};
+
     @Override
     public void create(Reimbursement reimbursement) {
         String sql = "INSERT INTO reimbursement VALUES(?, ?, ?, ?, ?, ?)";

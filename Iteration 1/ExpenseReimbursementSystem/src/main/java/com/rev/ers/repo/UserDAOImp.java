@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAOImp implements UserDAO {
+    public UserDAOImp() {};
 
     public User authenticate(String username, String password){
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
