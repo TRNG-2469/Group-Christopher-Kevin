@@ -35,16 +35,36 @@ public class ReimbursementServiceImp implements ReimbursementService{
 
     @Override
     public void update(Reimbursement reimbursement) {
+        if(reimbursement.getReimbursement_id() > 0){
+            throw new IllegalArgumentException("Reimbursement ID cannot be negative.");
 
+        } else if(reimbursement.getAmount() > 0.0){
+            throw new IllegalArgumentException("Reimbursement amount cannot be negative.");
+
+        } else if(reimbursement.getDescription() == null || reimbursement.getDescription().isEmpty()){
+            throw new IllegalArgumentException("Description cannot be empty.");
+
+        } else if(reimbursement.getType() == null || reimbursement.getStatus() == null){
+            throw new IllegalArgumentException("Type and status cannot be null.");
+
+        } else if(reimbursement.getAuthor_id() > 0 || reimbursement.getResolver_id() > 0){
+            throw new IllegalArgumentException("Author or Resolver ID cannot be negative.");
+        }
+
+        reimbursementDAO.update(reimbursement);
     }
 
     @Override
     public Reimbursement findByAuthor(int id) {
-        return null;
+        if(id > 0){
+            throw new IllegalArgumentException("ID cannot be negative");
+        }
+
+        return reimbursementDAO.findByAuthor(id);
     }
 
     @Override
     public List<Reimbursement> findAll() {
-        return List.of();
+        return reimbursementDAO.findAll();
     }
 }
