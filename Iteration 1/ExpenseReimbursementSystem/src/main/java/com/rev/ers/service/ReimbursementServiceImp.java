@@ -2,14 +2,18 @@ package com.rev.ers.service;
 
 import com.rev.ers.model.Reimbursement;
 import com.rev.ers.repo.ReimbursementDAO;
-import com.rev.ers.repo.ReimbursementDAOImp;
 
 import java.util.List;
 
 public class ReimbursementServiceImp implements ReimbursementService{
+    private final ReimbursementDAO reimbursementDAO;
+
+    public ReimbursementServiceImp(ReimbursementDAO reimbursementDAO) {
+        this.reimbursementDAO = reimbursementDAO;
+    }
+
     @Override
     public void create(Reimbursement reimbursement) {
-        ReimbursementDAO DAO = new ReimbursementDAOImp();
         if(reimbursement.getReimbursement_id() > 0){
             throw new IllegalArgumentException("Reimbursement ID cannot be negative.");
 
@@ -26,7 +30,7 @@ public class ReimbursementServiceImp implements ReimbursementService{
             throw new IllegalArgumentException("Author or Resolver ID cannot be negative.");
         }
 
-        DAO.create(reimbursement);
+        reimbursementDAO.create(reimbursement);
     }
 
     @Override
