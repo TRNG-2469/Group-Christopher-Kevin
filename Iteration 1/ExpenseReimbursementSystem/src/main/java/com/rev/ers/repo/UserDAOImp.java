@@ -45,7 +45,7 @@ public class UserDAOImp implements UserDAO {
     }
 
     @Override
-    public void register(User user) {
+    public User register(User user) {
         String sql = "INSERT INTO users VALUES(?, ?, ?, ?, ?, ?)";
 
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
@@ -58,9 +58,11 @@ public class UserDAOImp implements UserDAO {
             prep.setInt(6, user.getDepartment_id());
 
             prep.executeUpdate();
+            return user;
 
         } catch (SQLException e){
             e.printStackTrace();
         }
+        return null;
     }
 }

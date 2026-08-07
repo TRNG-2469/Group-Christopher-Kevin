@@ -21,7 +21,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public void register(User user) {
+    public User register(User user) {
         if(user.getUsername() == null || user.getUsername().isEmpty()
                 || user.getPassword() == null || user.getPassword().isEmpty()){
             throw new IllegalArgumentException("Username or password cannot be null or empty.");
@@ -34,6 +34,6 @@ public class UserServiceImp implements UserService{
             throw new IllegalArgumentException("Department ID cannot be negative.");
         }
 
-        userDAO.register(user);
+        return userDAO.register(user);
     }
 }
