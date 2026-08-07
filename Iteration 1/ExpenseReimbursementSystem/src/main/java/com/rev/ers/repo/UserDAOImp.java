@@ -13,6 +13,37 @@ import java.sql.SQLException;
 public class UserDAOImp implements UserDAO {
     public UserDAOImp() {};
 
+    @Override
+    public User searchByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement prep = conn.prepareStatement(sql);
+            prep.setString(1, username);
+
+            try (ResultSet result = prep.executeQuery()){
+                if(result.next()){
+                    int user_id = result.getInt(1);
+                    String user = result.getString(2);
+                    String pass = result.getString(3);
+                    String firstName = result.getString(4);
+                    String lastName = result.getString(5);
+                    String role = result.getString(6);
+                    int deptID = result.getInt(7);
+
+                    if(role.equals("manager")){
+                        return new Manager(user_id, user, pass, firstName, lastName, deptID);
+                    } else {
+                        return new Employee(user_id, user, pass, firstName, lastName, deptID);
+                    }
+                }
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public User authenticate(String username, String password){
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 
