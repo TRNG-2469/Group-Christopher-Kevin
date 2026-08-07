@@ -46,7 +46,7 @@
             const dropdown = document.getElementById("departments");
 
             // Call Javalin API endpoint
-            fetch("[placeholder]")
+            fetch("/departments")
                 .then(response => {
                     if(!response.ok){
                         throw new Error("Fuck you");
