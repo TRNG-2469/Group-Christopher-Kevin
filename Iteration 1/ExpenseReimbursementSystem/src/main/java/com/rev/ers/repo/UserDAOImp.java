@@ -24,7 +24,7 @@ public class UserDAOImp implements UserDAO {
                 }
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
         return null;
     }
@@ -43,7 +43,7 @@ public class UserDAOImp implements UserDAO {
                 }
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
         return null;
     }
@@ -62,8 +62,7 @@ public class UserDAOImp implements UserDAO {
             prep.executeUpdate();
             return user;
         } catch (SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
-        return null;
     }
 }

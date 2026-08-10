@@ -21,13 +21,28 @@ public class ReimbursementServiceImp implements ReimbursementService{
     @Override
     public void update(Reimbursement reimbursement) {
         validation(reimbursement);
+        Reimbursement original = findById(reimbursement.getReimbursement_id());
+        if(original == null) {
+            throw new IllegalArgumentException("Reimbursement ID not found.");
+        }
+        if(original.getStatus() == Status.APPROVED || original.getStatus() == Status.DENIED) {
+            throw new IllegalArgumentException("Cannot update a reimbursement that has been approved or denied.");
+        }
         reimbursementDAO.update(reimbursement);
+    }
+
+    @Override
+    public Reimbursement findById(int id) {
+        if(id <= 0){
+            throw new IllegalArgumentException("Reimbursement ID cannot be negative or zero.");
+        }
+        return reimbursementDAO.findById(id);
     }
 
     @Override
     public List<Reimbursement> findByAuthor(int id, Status status) {
         if(id <= 0){
-            throw new IllegalArgumentException("ID cannot be negative or zero.");
+            throw new IllegalArgumentException("User ID cannot be negative or zero.");
         }
         return reimbursementDAO.findByAuthor(id, status);
     }

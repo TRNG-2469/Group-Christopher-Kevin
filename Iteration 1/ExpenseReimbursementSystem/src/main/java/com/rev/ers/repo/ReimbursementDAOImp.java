@@ -26,7 +26,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
             prep.setInt(6, reimbursement.getResolver_id());
             prep.executeUpdate();
         } catch(SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
     }
 
@@ -42,13 +42,13 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
             prep.setInt(5, reimbursement.getResolver_id());
             prep.executeUpdate();
         } catch(SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
     }
 
     @Override
-    public List<Reimbursement> findByAuthor(int id, Status status) {
-        String sql = "SELECT * FROM reimbursements WHERE author = ?;";
+    public Reimbursement findById(int id) {
+        String sql = "SELECT * FROM reimbursements WHERE id = ?;";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setInt(1, id);
@@ -57,15 +57,32 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
                 return mapResultSetToReimbursement(result);
             }
         } catch(SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
         return null;
     }
 
     @Override
+    public List<Reimbursement> findByAuthor(int id, Status status) {
+        String sql = "SELECT * FROM reimbursements WHERE author = ?;";
+        List<Reimbursement> allReimbs = new ArrayList<>();
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement prep = conn.prepareStatement(sql);
+            prep.setInt(1, id);
+            ResultSet result = prep.executeQuery();
+            while(result.next()){
+                allReimbs.add(mapResultSetToReimbursement(result));
+            }
+            return allReimbs;
+        } catch(SQLException e){
+            throw new RuntimeException("Database error", e);
+        }
+    }
+
+    @Override
     public List<Reimbursement> findAll(Status status, Integer departmentId) {
         String sql = "SELECT * FROM reimbursements;";
-        List<Reimbursement> allReimbs = new ArrayList<>(10);
+        List<Reimbursement> allReimbs = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             ResultSet result = prep.executeQuery();
@@ -74,9 +91,8 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
             }
             return allReimbs;
         } catch(SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
-        return null;
     }
 
     private Reimbursement mapResultSetToReimbursement(ResultSet result) throws SQLException {

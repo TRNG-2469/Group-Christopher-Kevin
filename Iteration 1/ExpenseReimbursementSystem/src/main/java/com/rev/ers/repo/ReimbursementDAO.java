@@ -8,6 +8,7 @@ import java.util.List;
 public interface ReimbursementDAO {
     void create(Reimbursement reimbursement);
     void update(Reimbursement reimbursement);
+    Reimbursement findById(int id);
     List<Reimbursement> findByAuthor(int id, Status status);
     List<Reimbursement> findAll(Status status, Integer departmentId);
 }
