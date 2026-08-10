@@ -22,7 +22,7 @@ public class DepartmentDAOImp implements DepartmentDAO{
                 return mapResultSetToDepartment(result);
             }
         } catch(SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
         return null;
     }
@@ -39,7 +39,7 @@ public class DepartmentDAOImp implements DepartmentDAO{
             }
             return allDepts;
         } catch(SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Database error", e);
         }
         return null;
     }
