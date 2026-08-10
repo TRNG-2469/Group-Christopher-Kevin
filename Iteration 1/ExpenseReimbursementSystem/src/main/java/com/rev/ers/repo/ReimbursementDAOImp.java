@@ -64,10 +64,14 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
 
     @Override
     public List<Reimbursement> findByAuthor(int id, Status status) {
-        String sql = "SELECT * FROM reimbursements WHERE author = ?;";
+        StringBuilder sql = new StringBuilder("SELECT * FROM reimbursements WHERE author = ?");
+        if (status != null) {
+            sql.append(" AND status = ?");
+        }
+        sql.append(";");
         List<Reimbursement> allReimbs = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement prep = conn.prepareStatement(sql);
+            PreparedStatement prep = conn.prepareStatement(sql.toString());
             prep.setInt(1, id);
             ResultSet result = prep.executeQuery();
             while(result.next()){
@@ -81,10 +85,17 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
 
     @Override
     public List<Reimbursement> findAll(Status status, Integer departmentId) {
-        String sql = "SELECT * FROM reimbursements;";
+        StringBuilder sql = new StringBuilder("SELECT * FROM reimbursements WHERE 1 = 1");
+        if (status != null) {
+            sql.append(" AND status = ?");
+        }
+        if (departmentId != null) {
+            sql.append(" AND department_id = ?");
+        }
+        sql.append(";");
         List<Reimbursement> allReimbs = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement prep = conn.prepareStatement(sql);
+            PreparedStatement prep = conn.prepareStatement(sql.toString());
             ResultSet result = prep.executeQuery();
             while(result.next()){
                 allReimbs.add(mapResultSetToReimbursement(result));
