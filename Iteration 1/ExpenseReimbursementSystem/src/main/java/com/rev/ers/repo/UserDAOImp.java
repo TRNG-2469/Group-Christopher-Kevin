@@ -1,10 +1,8 @@
 package com.rev.ers.repo;
 
-import com.rev.ers.model.Employee;
-import com.rev.ers.model.Manager;
 import com.rev.ers.model.User;
 import com.rev.ers.utils.ConnectionFactory;
-
+import com.rev.ers.utils.UserFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +18,9 @@ public class UserDAOImp implements UserDAO {
 
             try (ResultSet result = prep.executeQuery()){
                 if (result.next()) {
-                    return mapResultSetToUser(result);
+                    return UserFactory.createUser(result.getInt("id"), result.getString("username"),
+                            result.getString("password"), result.getString("first_name"), result.getString("last_name"),
+                            result.getString("role"), result.getInt("department_id"));
                 }
             }
         } catch (SQLException e){
@@ -37,7 +37,9 @@ public class UserDAOImp implements UserDAO {
             prep.setString(2, password);
             try (ResultSet result = prep.executeQuery()){
                 if (result.next()) {
-                    return mapResultSetToUser(result);
+                    return UserFactory.createUser(result.getInt("id"), result.getString("username"),
+                            result.getString("password"), result.getString("first_name"), result.getString("last_name"),
+                            result.getString("role"), result.getInt("department_id"));
                 }
             }
         } catch (SQLException e){
@@ -63,19 +65,5 @@ public class UserDAOImp implements UserDAO {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private User mapResultSetToUser(ResultSet result) throws SQLException {
-        int userId = result.getInt("id");
-        String username = result.getString("username");
-        String password = result.getString("password");
-        String firstName = result.getString("first_name");
-        String lastName = result.getString("last_name");
-        String role = result.getString("role");
-        int departmentId = result.getInt("department_id");
-        if (role.equals("manager")) {
-            return new Manager(userId, username, password, firstName, lastName, departmentId);
-        }
-        return new Employee(userId, username, password, firstName, lastName, departmentId);
     }
 }
