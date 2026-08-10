@@ -5,8 +5,12 @@ import com.rev.ers.repo.*;
 import com.rev.ers.service.*;
 
 import io.javalin.Javalin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class App {
+    private static final Logger logger = LoggerFactory.getLogger(App.class);
+
     public static void main(String[] args) {
         UserDAO userDAO = new UserDAOImp();
         DepartmentDAO departmentDAO = new DepartmentDAOImp();
@@ -34,5 +38,13 @@ public class App {
         app.put("/reimbursements/{id}", reimbursementHandler::update);
         app.get("/reimbursements", reimbursementHandler::findAll);
         app.get("/reimbursements/{id}", reimbursementHandler::findByAuthor);
+
+        app.before(ctx -> {
+            logger.info("Attempting request - Method: {} | Path: {}", ctx.method(), ctx.path());
+        });
+
+        app.after(ctx ->  {
+            logger.info("BING BONG");
+        });
     }
 }
