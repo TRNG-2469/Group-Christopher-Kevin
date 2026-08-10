@@ -15,6 +15,9 @@ public class DepartmentServiceImp implements DepartmentService {
 
     @Override
     public Department findDepartmentById(int id) {
+        if(id <= 0){
+            throw new IllegalArgumentException("Reimbursement ID cannot be negative or zero.");
+        }
         return departmentDAO.findDepartmentById(id);
     }
 
