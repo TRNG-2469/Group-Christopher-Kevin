@@ -4,7 +4,6 @@ import com.rev.ers.model.Reimbursement;
 import java.util.List;
 
 public interface ReimbursementService {
-    // CRUD operations
     void create(Reimbursement reimbursement);
     void update(Reimbursement reimbursement);
 
