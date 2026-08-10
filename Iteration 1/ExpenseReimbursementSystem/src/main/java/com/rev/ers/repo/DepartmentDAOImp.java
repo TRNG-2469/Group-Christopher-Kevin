@@ -41,7 +41,6 @@ public class DepartmentDAOImp implements DepartmentDAO{
         } catch(SQLException e){
             throw new RuntimeException("Database error", e);
         }
-        return null;
     }
 
     private Department mapResultSetToDepartment(ResultSet result) throws SQLException{
