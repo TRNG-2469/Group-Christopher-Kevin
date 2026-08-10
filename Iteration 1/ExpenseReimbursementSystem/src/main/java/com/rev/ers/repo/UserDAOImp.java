@@ -29,17 +29,14 @@ public class UserDAOImp implements UserDAO {
         return null;
     }
 
-    public User authenticate(String username, String password){
-        String sql = "SELECT id, username, first_name, last_name, role, department FROM users WHERE username = ? AND password = ?";
+    public String authenticate(String username){
+        String sql = "SELECT password FROM users WHERE username = ?";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setString(1, username);
-            prep.setString(2, password);
             try (ResultSet result = prep.executeQuery()){
                 if (result.next()) {
-                    return UserFactory.createUser(result.getInt("id"), result.getString("username"),
-                            result.getString("password"), result.getString("first_name"), result.getString("last_name"),
-                            result.getString("role"), result.getInt("department_id"));
+                    return result.getString("password");
                 }
             }
         } catch (SQLException e){

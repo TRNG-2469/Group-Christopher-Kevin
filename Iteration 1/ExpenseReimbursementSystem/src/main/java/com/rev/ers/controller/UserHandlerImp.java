@@ -15,9 +15,8 @@ public class UserHandlerImp implements UserHandler{
     @Override
     public void authenticate(Context ctx) {
         User user = ctx.bodyAsClass(User.class);
-        User authenticatedUser = userService.authenticate(user.getUsername(), user.getPassword());
-        if (authenticatedUser != null) {
-            ctx.status(200).json(authenticatedUser);
+        if (userService.authenticate(user.getUsername(), user.getPassword())) {
+            ctx.status(200).json(user);
         } else {
             ctx.status(401).result("Invalid username or password.");
         }
