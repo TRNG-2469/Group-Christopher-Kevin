@@ -15,8 +15,8 @@ public class DepartmentHandlerImp implements DepartmentHandler {
 
     @Override
     public void findDepartmentById(Context ctx) {
-        Department department = ctx.bodyAsClass(Department.class);
-        Department foundDepartment = departmentService.findDepartmentById(department.getId());
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        Department foundDepartment = departmentService.findDepartmentById(id);
         if (foundDepartment != null) {
             ctx.status(200).json(foundDepartment);
         } else {
