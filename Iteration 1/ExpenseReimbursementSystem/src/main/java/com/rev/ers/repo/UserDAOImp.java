@@ -11,31 +11,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAOImp implements UserDAO {
-    public UserDAOImp() {};
-
     @Override
     public User searchByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
-
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setString(1, username);
 
             try (ResultSet result = prep.executeQuery()){
-                if(result.next()){
-                    int user_id = result.getInt(1);
-                    String user = result.getString(2);
-                    String pass = result.getString(3);
-                    String firstName = result.getString(4);
-                    String lastName = result.getString(5);
-                    String role = result.getString(6);
-                    int deptID = result.getInt(7);
-
-                    if(role.equals("manager")){
-                        return new Manager(user_id, user, pass, firstName, lastName, deptID);
-                    } else {
-                        return new Employee(user_id, user, pass, firstName, lastName, deptID);
-                    }
+                if (result.next()) {
+                    return mapResultSetToUser(result);
                 }
             }
         } catch (SQLException e){
@@ -45,40 +30,25 @@ public class UserDAOImp implements UserDAO {
     }
 
     public User authenticate(String username, String password){
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-
+        String sql = "SELECT id, username, first_name, last_name, role, department FROM users WHERE username = ? AND password = ?";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setString(1, username);
             prep.setString(2, password);
-
             try (ResultSet result = prep.executeQuery()){
-                while(result.next()){
-                    int user_id = result.getInt(1);
-                    String user = result.getString(2);
-                    String pass = result.getString(3);
-                    String firstName = result.getString(4);
-                    String lastName = result.getString(5);
-                    int deptID = result.getInt(7);
-
-                    if(result.getString(6).equals("manager")){
-                        return new Manager(user_id, user, pass, firstName, lastName, deptID);
-                    } else {
-                        return new Employee(user_id, user, pass, firstName, lastName, deptID);
-                    }
+                if (result.next()) {
+                    return mapResultSetToUser(result);
                 }
-                return null;
             }
         } catch (SQLException e){
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     @Override
     public User register(User user) {
-        String sql = "INSERT INTO users VALUES(?, ?, ?, ?, ?, ?)";
-
+        String sql = "INSERT INTO users (username, password, first_name, last_name, role, deptartment_id) VALUES(?, ?, ?, ?, ?, ?)";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setString(1, user.getUsername());
@@ -87,13 +57,25 @@ public class UserDAOImp implements UserDAO {
             prep.setString(4, user.getLastName());
             prep.setString(5, user.getRole().getDbValue());
             prep.setInt(6, user.getDepartment_id());
-
             prep.executeUpdate();
             return user;
-
         } catch (SQLException e){
             e.printStackTrace();
         }
         return null;
+    }
+
+    private User mapResultSetToUser(ResultSet result) throws SQLException {
+        int userId = result.getInt("id");
+        String username = result.getString("username");
+        String password = result.getString("password");
+        String firstName = result.getString("first_name");
+        String lastName = result.getString("last_name");
+        String role = result.getString("role");
+        int departmentId = result.getInt("department_id");
+        if (role.equals("manager")) {
+            return new Manager(userId, username, password, firstName, lastName, departmentId);
+        }
+        return new Employee(userId, username, password, firstName, lastName, departmentId);
     }
 }

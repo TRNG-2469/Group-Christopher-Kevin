@@ -3,7 +3,6 @@ package com.rev.ers.service;
 import com.rev.ers.model.User;
 import com.rev.ers.repo.DepartmentDAO;
 import com.rev.ers.repo.UserDAO;
-import com.rev.ers.repo.UserDAOImp;
 
 public class UserServiceImp implements UserService{
     private final UserDAO userDAO;
@@ -34,24 +33,27 @@ public class UserServiceImp implements UserService{
 
     @Override
     public User register(User user) {
+        // Ensures user is not null
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null.");
+        }
         // Ensures username does not already exist and username input is valid
         if(searchByUsername(user.getUsername()) != null){
             throw new IllegalArgumentException("Username already exists.");
         }
         // Ensures password is not null or empty
-        if(user.getPassword() == null || user.getPassword().isEmpty()){
-            throw new IllegalArgumentException("Username or password cannot be null or empty.");
+        if(user.getPassword() == null || user.getPassword().isBlank()){
+            throw new IllegalArgumentException("Username or password cannot be null or blank.");
         }
         // Ensures first and last name are not null or empty
-        if(user.getFirstName() == null || user.getFirstName().isEmpty()
-                || user.getLastName() == null || user.getLastName().isEmpty()){
-            throw new IllegalArgumentException("First or last name cannot be null or empty.");
+        if(user.getFirstName() == null || user.getFirstName().isBlank()
+                || user.getLastName() == null || user.getLastName().isBlank()){
+            throw new IllegalArgumentException("First or last name cannot be null or blank.");
         }
         // Ensures department ID exists
         if(departmentDAO.findDepartmentById(user.getDepartment_id()) == null){
             throw new IllegalArgumentException("Department ID does not exist.");
         }
-
         return userDAO.register(user);
     }
 }
