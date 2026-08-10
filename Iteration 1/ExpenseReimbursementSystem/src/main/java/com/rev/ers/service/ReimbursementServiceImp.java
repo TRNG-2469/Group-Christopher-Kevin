@@ -36,7 +36,7 @@ public class ReimbursementServiceImp implements ReimbursementService{
         return reimbursementDAO.findAll();
     }
 
-    private boolean validation(Reimbursement reimbursement) {
+    private void validation(Reimbursement reimbursement) {
         if(reimbursement.getReimbursement_id() <= 0){
             throw new IllegalArgumentException("Reimbursement ID cannot be negative or zero.");
         } else if(reimbursement.getAmount() <= 0.0){
@@ -48,6 +48,5 @@ public class ReimbursementServiceImp implements ReimbursementService{
         } else if(reimbursement.getAuthor_id() <= 0 || reimbursement.getResolver_id() <= 0){
             throw new IllegalArgumentException("Author or Resolver ID cannot be negative or zero.");
         }
-        return true;
     }
 }
