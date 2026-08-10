@@ -21,14 +21,18 @@ public class App {
         ReimbursementHandler reimbursementHandler = new ReimbursementHandlerImp(reimbursementService);
 
         Javalin app = Javalin.create().start(7000);
+
         app.get("/", ctx -> ctx.result("Hello World"));
+
         app.post("/register", userHandler::register);
         app.post("/login", userHandler::authenticate);
+
         app.get("/departments/{id}", departmentHandler::findDepartmentById);
         app.get("/departments", departmentHandler::findAll);
-        app.get("/reimbursements", reimbursementHandler::findAll);
+
         app.post("/reimbursements", reimbursementHandler::create);
         app.put("/reimbursements/{id}", reimbursementHandler::update);
+        app.get("/reimbursements", reimbursementHandler::findAll);
         app.get("/reimbursements/{id}", reimbursementHandler::findByAuthor);
     }
 }
