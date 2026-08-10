@@ -26,5 +26,9 @@ public class App {
         app.post("/login", userHandler::authenticate);
         app.get("/departments/{id}", departmentHandler::findDepartmentById);
         app.get("/departments", departmentHandler::findAll);
+        app.get("/reimbursements", reimbursementHandler::findAll);
+        app.post("/reimbursements", reimbursementHandler::create);
+        app.put("/reimbursements/{id}", reimbursementHandler::update);
+        app.get("/reimbursements/{id}", reimbursementHandler::findByAuthor);
     }
 }
