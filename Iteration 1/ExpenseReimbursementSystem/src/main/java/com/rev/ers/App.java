@@ -44,7 +44,12 @@ public class App {
         });
 
         app.after(ctx ->  {
-            logger.info("BING BONG");
+            if(ctx.statusCode() == 200 || ctx.statusCode() == 201) {
+                logger.info("Request succeeded with status code " + ctx.statusCode());
+            } else {
+                logger.warn("Request failed with status code " + ctx.statusCode() + ": " +
+                        ctx.result());
+            }
         });
     }
 }
