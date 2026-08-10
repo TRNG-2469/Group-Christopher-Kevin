@@ -19,9 +19,7 @@ public class DepartmentDAOImp implements DepartmentDAO{
             prep.setInt(1, id);
             ResultSet result = prep.executeQuery();
             if(result.next()) {
-                int deptId = result.getInt(1);
-                String name = result.getString(2);
-                return new Department(deptId, name);
+                return mapResultSetToDepartment(result);
             }
         } catch(SQLException e){
             e.printStackTrace();
@@ -37,15 +35,18 @@ public class DepartmentDAOImp implements DepartmentDAO{
             PreparedStatement prep = conn.prepareStatement(sql);
             ResultSet result = prep.executeQuery();
             while(result.next()){
-                int deptId = result.getInt(1);
-                String name = result.getString(2);
-                Department department = new Department(deptId, name);
-                allDepts.add(department);
+                allDepts.add(mapResultSetToDepartment(result));
             }
             return allDepts;
         } catch(SQLException e){
             e.printStackTrace();
         }
         return null;
+    }
+
+    private Department mapResultSetToDepartment(ResultSet result) throws SQLException{
+        int deptId = result.getInt(1);
+        String name = result.getString(2);
+        return new Department(deptId, name);
     }
 }
