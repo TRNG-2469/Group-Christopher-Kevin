@@ -31,56 +31,28 @@ public class Reimbursement {
         return reimbursement_id;
     }
 
-    public void setReimbursement_id(int reimbursement_id) {
-        this.reimbursement_id = reimbursement_id;
-    }
-
     public double getAmount() {
         return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Type getType() {
         return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
     }
 
     public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public int getAuthor_id() {
         return author_id;
     }
 
-    public void setAuthor_id(int author_id) {
-        this.author_id = author_id;
-    }
-
     public int getResolver_id() {
         return resolver_id;
-    }
-
-    public void setResolver_id(int resolver_id) {
-        this.resolver_id = resolver_id;
     }
 
     @Override
