@@ -4,6 +4,6 @@ import com.rev.ers.model.User;
 
 public interface UserDAO {
     public User searchByUsername(String username);
-    public User authenticate(String username, String password);
+    public String authenticate(String username);
     public User register(User user);
 }

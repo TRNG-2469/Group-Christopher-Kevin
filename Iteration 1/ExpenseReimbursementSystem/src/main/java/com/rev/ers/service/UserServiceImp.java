@@ -3,6 +3,7 @@ package com.rev.ers.service;
 import com.rev.ers.model.User;
 import com.rev.ers.repo.DepartmentDAO;
 import com.rev.ers.repo.UserDAO;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserServiceImp implements UserService{
     private final UserDAO userDAO;
@@ -23,12 +24,16 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public User authenticate(String username, String password) {
-        // Ensures username and password inputs are valid
-        if(username == null || password == null || username.isEmpty() || password.isEmpty()){
+    public boolean authenticate(String username, String password) {
+        // Ensures username and password are not null or empty
+        if (username == null || username.isBlank() || password == null || password.isBlank()) {
             throw new IllegalArgumentException("Username or password cannot be null or empty.");
         }
-        return userDAO.authenticate(username, password);
+        String storedPassword = userDAO.authenticate(username);
+        if (storedPassword == null) {
+            return false;
+        }
+        return BCrypt.checkpw(password, storedPassword);
     }
 
     @Override

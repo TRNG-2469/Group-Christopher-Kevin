@@ -53,6 +53,13 @@
             <version>5.2.2</version>
         </dependency>
 
+        <!-- For password hashing -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
         <!-- Source: https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -68,4 +75,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

@@ -30,6 +30,10 @@ public class App {
 
         app.post("/register", userHandler::register);
         app.post("/login", userHandler::authenticate);
+        app.post("/logout", ctx -> {
+            ctx.sessionAttribute("user", null);
+            ctx.status(200).result("Logged out successfully.");
+        });
 
         app.get("/departments/{id}", departmentHandler::findDepartmentById);
         app.get("/departments", departmentHandler::findAll);
