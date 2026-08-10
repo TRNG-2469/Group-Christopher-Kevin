@@ -53,15 +53,8 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setInt(1, id);
             ResultSet result = prep.executeQuery();
-            while(result.next()){
-                int reimbursementID = result.getInt(1);
-                double amount = result.getDouble(2);
-                String description = result.getString(3);
-                Type type = Type.valueOf(result.getString(4));
-                Status status = Status.valueOf(result.getString(5));
-                int author = result.getInt(6);
-                int resolver = result.getInt(7);
-                return new Reimbursement(reimbursementID, amount, description, type, status, author, resolver);
+            if(result.next()){
+                return mapResultSetToReimbursement(result);
             }
         } catch(SQLException e){
             e.printStackTrace();
@@ -77,20 +70,23 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
             PreparedStatement prep = conn.prepareStatement(sql);
             ResultSet result = prep.executeQuery();
             while(result.next()){
-                int reimbursementID = result.getInt(1);
-                double amount = result.getDouble(2);
-                String description = result.getString(3);
-                Type type = Type.valueOf(result.getString(4));
-                Status status = Status.valueOf(result.getString(5));
-                int author = result.getInt(6);
-                int resolver = result.getInt(7);
-                Reimbursement reimbursement = new Reimbursement(reimbursementID, amount, description, type, status, author, resolver);
-                allReimbs.add(reimbursement);
+                allReimbs.add(mapResultSetToReimbursement(result));
             }
             return allReimbs;
         } catch(SQLException e){
             e.printStackTrace();
         }
         return null;
+    }
+
+    private Reimbursement mapResultSetToReimbursement(ResultSet result) throws SQLException {
+        int reimbursementID = result.getInt(1);
+        double amount = result.getDouble(2);
+        String description = result.getString(3);
+        Type type = Type.valueOf(result.getString(4));
+        Status status = Status.valueOf(result.getString(5));
+        int author = result.getInt(6);
+        int resolver = result.getInt(7);
+        return new Reimbursement(reimbursementID, amount, description, type, status, author, resolver);
     }
 }
