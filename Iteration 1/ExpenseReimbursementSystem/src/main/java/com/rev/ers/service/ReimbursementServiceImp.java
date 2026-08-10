@@ -1,5 +1,6 @@
 package com.rev.ers.service;
 
+import com.rev.ers.enums.Status;
 import com.rev.ers.model.Reimbursement;
 import com.rev.ers.repo.ReimbursementDAO;
 import java.util.List;
@@ -24,16 +25,16 @@ public class ReimbursementServiceImp implements ReimbursementService{
     }
 
     @Override
-    public Reimbursement findByAuthor(int id) {
+    public List<Reimbursement> findByAuthor(int id, Status status) {
         if(id <= 0){
             throw new IllegalArgumentException("ID cannot be negative or zero.");
         }
-        return reimbursementDAO.findByAuthor(id);
+        return reimbursementDAO.findByAuthor(id, status);
     }
 
     @Override
-    public List<Reimbursement> findAll() {
-        return reimbursementDAO.findAll();
+    public List<Reimbursement> findAll(Status status, Integer departmentId) {
+        return reimbursementDAO.findAll(status, departmentId);
     }
 
     private void validation(Reimbursement reimbursement) {

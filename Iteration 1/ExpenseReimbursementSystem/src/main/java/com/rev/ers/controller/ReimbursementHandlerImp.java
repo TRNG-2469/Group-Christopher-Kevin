@@ -1,5 +1,6 @@
 package com.rev.ers.controller;
 
+import com.rev.ers.enums.Status;
 import com.rev.ers.model.Reimbursement;
 import com.rev.ers.service.ReimbursementService;
 import io.javalin.http.Context;
@@ -29,18 +30,47 @@ public class ReimbursementHandlerImp implements ReimbursementHandler {
 
     @Override
     public void findByAuthor(Context ctx) {
-        int id = Integer.parseInt(ctx.pathParam("id"));
-        Reimbursement reimbursement = reimbursementService.findByAuthor(id);
-        if (reimbursement != null) {
-            ctx.status(200).json(reimbursement);
+        int authorId = 0;
+        Status status = null;
+        String statusParam = ctx.queryParam("status");
+        if (statusParam != null) {
+            try {
+                status = Status.valueOf(statusParam.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid status.");
+            }
+        }
+        try {
+            authorId = Integer.parseInt(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid user ID.");
+        }
+        List<Reimbursement> reimbursements = reimbursementService.findByAuthor(authorId, status);
+        if (!reimbursements.isEmpty()) {
+            ctx.status(200).json(reimbursements);
         } else {
-            ctx.status(404).result("Reimbursement not found.");
+            ctx.status(404).result("No reimbursements found.");
         }
     }
 
     @Override
     public void findAll(Context ctx) {
-        List<Reimbursement> reimbursements = reimbursementService.findAll();
+        int departmentId = 0;
+        Status status = null;
+        String statusParam = ctx.queryParam("status");
+        if (statusParam != null) {
+            try {
+                status = Status.valueOf(statusParam.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid status.");
+            }
+        }
+        try {
+            departmentId = Integer.parseInt(ctx.pathParam("department_id"));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid department ID.");
+        }
+        List<Reimbursement> reimbursements = reimbursementService.findAll(status, departmentId);
         if (!reimbursements.isEmpty()) {
             ctx.status(200).json(reimbursements);
         } else {

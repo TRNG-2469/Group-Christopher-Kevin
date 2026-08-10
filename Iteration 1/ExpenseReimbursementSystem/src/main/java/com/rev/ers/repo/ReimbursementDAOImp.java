@@ -47,7 +47,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
     }
 
     @Override
-    public Reimbursement findByAuthor(int id) {
+    public List<Reimbursement> findByAuthor(int id, Status status) {
         String sql = "SELECT * FROM reimbursements WHERE author = ?;";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
@@ -63,7 +63,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
     }
 
     @Override
-    public List<Reimbursement> findAll() {
+    public List<Reimbursement> findAll(Status status, Integer departmentId) {
         String sql = "SELECT * FROM reimbursements;";
         List<Reimbursement> allReimbs = new ArrayList<>(10);
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
