@@ -18,7 +18,7 @@ public class ReimbursementServiceImp implements ReimbursementService{
     @Override
     public void createReimbursement(Reimbursement reimbursement, User author) {
         validation(reimbursement);
-        reimbursement.setAuthor_id(author.getUser_id());
+        reimbursement.setAuthorId(author.getUserId());
         reimbursementDAO.createReimbursement(reimbursement);
     }
 
@@ -50,12 +50,12 @@ public class ReimbursementServiceImp implements ReimbursementService{
     @Override
     public Reimbursement updateReimbursement(Reimbursement reimbursement) {
         validation(reimbursement);
-        if(reimbursement.getReimbursement_id() <= 0){
+        if(reimbursement.getReimbursementId() <= 0){
             throw new IllegalArgumentException("Reimbursement ID cannot be negative or zero.");
         } else if(reimbursement.getType() == null || reimbursement.getStatus() == null){
             throw new IllegalArgumentException("Type and status cannot be null.");
         }
-        Reimbursement original = queryReimbursementByReimbursementId(reimbursement.getReimbursement_id());
+        Reimbursement original = queryReimbursementByReimbursementId(reimbursement.getReimbursementId());
         if(original == null) {
             throw new IllegalArgumentException("Reimbursement ID not found.");
         }
@@ -66,11 +66,11 @@ public class ReimbursementServiceImp implements ReimbursementService{
     }
 
     @Override
-    public void resolveReimbursement(int id, User manager, Status status) {
+    public void resolveReimbursement(int reimbursementId, User manager, Status status) {
         if(status == Status.PENDING) {
             throw new IllegalArgumentException("Cannot set status to PENDING when resolving a reimbursement.");
         }
-        Reimbursement original = queryReimbursementByReimbursementId(id);
+        Reimbursement original = queryReimbursementByReimbursementId(reimbursementId);
         if(original == null) {
             throw new IllegalArgumentException("Reimbursement ID not found.");
         }
@@ -78,7 +78,7 @@ public class ReimbursementServiceImp implements ReimbursementService{
             throw new IllegalArgumentException("Cannot update a reimbursement that has been approved or denied.");
         }
         original.setStatus(status);
-        original.setResolver_id(manager.getUser_id());
+        original.setResolverId(manager.getUserId());
         reimbursementDAO.updateReimbursement(original);
     }
 
@@ -87,7 +87,7 @@ public class ReimbursementServiceImp implements ReimbursementService{
             throw new IllegalArgumentException("Reimbursement amount cannot be negative or zero.");
         } else if(reimbursement.getDescription() == null || reimbursement.getDescription().isBlank()){
             throw new IllegalArgumentException("Description cannot be null or blank.");
-        } else if(reimbursement.getAuthor_id() <= 0){
+        } else if(reimbursement.getAuthorId() <= 0){
             throw new IllegalArgumentException("Author ID cannot be negative or zero.");
         }
     }

@@ -5,32 +5,33 @@ import com.rev.ers.enums.Role;
 import java.util.Objects;
 
 public abstract class User {
-    private int user_id;
+    private int userId;
     private String username;
     private String password;
     private String firstName;
     private String lastName;
     private Role role;
-    private int department_id;
+    private int departmentId;
 
     private User() {}
 
-    public User(int user_id, String username, String password, String firstName, String lastName, Role role, int department_id) {
-        this.user_id = user_id;
+    public User(int userId, String username, String password, String firstName, String lastName, Role role, int departmentId) {
+        this.userId = userId;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
-        this.department_id = department_id;
+        this.departmentId = departmentId;
     }
 
-    public int getUser_id() {
-        return user_id;
+
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -73,32 +74,33 @@ public abstract class User {
         this.role = role;
     }
 
-    public int getDepartment_id() {
-        return department_id;
+
+    public int getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(int department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "user_id=" + user_id +
+                "user_id=" + userId +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", role=" + role +
-                ", department_id=" + department_id +
+                ", department_id=" + departmentId +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof User user)) return false;
-        return getUser_id() == user.getUser_id() &&
-                getDepartment_id() == user.getDepartment_id() &&
+        return getUserId() == user.getUserId() &&
+                getDepartmentId() == user.getDepartmentId() &&
                 Objects.equals(getUsername(), user.getUsername()) &&
                 Objects.equals(getPassword(), user.getPassword()) &&
                 Objects.equals(getFirstName(), user.getFirstName()) &&
@@ -108,7 +110,7 @@ public abstract class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUser_id(), getUsername(), getPassword(),
-                getFirstName(), getLastName(), getRole(), getDepartment_id());
+        return Objects.hash(getUserId(), getUsername(), getPassword(),
+                getFirstName(), getLastName(), getRole(), getDepartmentId());
     }
 }

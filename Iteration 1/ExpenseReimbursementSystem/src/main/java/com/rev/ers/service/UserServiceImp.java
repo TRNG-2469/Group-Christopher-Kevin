@@ -63,7 +63,7 @@ public class UserServiceImp implements UserService{
             throw new IllegalArgumentException("First or last name cannot be null or blank.");
         }
         // Ensures department ID exists
-        if(departmentDAO.findDepartmentById(user.getDepartment_id()) == null){
+        if(departmentDAO.findDepartmentById(user.getDepartmentId()) == null){
             throw new IllegalArgumentException("Department ID does not exist.");
         }
         return userDAO.register(user);

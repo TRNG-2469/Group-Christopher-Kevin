@@ -10,8 +10,8 @@ public interface ReimbursementDAO {
     void createReimbursement(Reimbursement reimbursement);
     // Read
     List<Reimbursement> queryReimbursements(Status status, Integer departmentId);
-    List<Reimbursement> queryReimbursementsByAuthorId(int id, Status status);
-    Reimbursement queryReimbursementByReimbursementId(int id);
+    List<Reimbursement> queryReimbursementsByAuthorId(int authorId, Status status);
+    Reimbursement queryReimbursementByReimbursementId(int reimbursementId);
     // Update
     Reimbursement updateReimbursement(Reimbursement reimbursement);
 

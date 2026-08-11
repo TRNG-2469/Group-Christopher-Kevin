@@ -15,5 +15,5 @@ public interface ReimbursementService {
     Reimbursement queryReimbursementByReimbursementId(int reimbursementId);
     // Update
     Reimbursement updateReimbursement(Reimbursement reimbursement);
-    void resolveReimbursement(int id, User manager, Status status);
+    void resolveReimbursement(int reimbursementId, User manager, Status status);
 }

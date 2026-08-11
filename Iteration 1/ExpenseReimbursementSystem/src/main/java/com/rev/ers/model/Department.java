@@ -3,40 +3,40 @@ package com.rev.ers.model;
 import java.util.Objects;
 
 public class Department {
-    private int id;
-    private String name;
+    private int departmentId;
+    private String departmentName;
 
     private Department() {}
 
-    public Department(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public Department(int departmentId, String departmentName) {
+        this.departmentId = departmentId;
+        this.departmentName = departmentName;
     }
 
-    public int getId() {
-        return id;
+    public int getDepartmentId() {
+        return departmentId;
     }
 
-    public String getName() {
-        return name;
+    public String getDepartmentName() {
+        return departmentName;
     }
 
     @Override
     public String toString() {
         return "Department{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "id=" + departmentId +
+                ", name='" + departmentName + '\'' +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Department that)) return false;
-        return getId() == that.getId() && Objects.equals(getName(), that.getName());
+        return getDepartmentId() == that.getDepartmentId() && Objects.equals(getDepartmentName(), that.getDepartmentName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName());
+        return Objects.hash(getDepartmentId(), getDepartmentName());
     }
 }

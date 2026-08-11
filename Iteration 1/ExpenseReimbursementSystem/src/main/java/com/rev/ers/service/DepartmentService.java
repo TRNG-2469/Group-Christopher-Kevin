@@ -5,6 +5,6 @@ import com.rev.ers.model.Department;
 import java.util.List;
 
 public interface DepartmentService {
-    Department findDepartmentById(int id);
-    List<Department> findAll();
+    Department queryDepartmentByDepartmentId(int id);
+    List<Department> queryDepartments();
 }

@@ -5,6 +5,6 @@ import com.rev.ers.model.Department;
 import java.util.List;
 
 public interface DepartmentDAO {
-    Department findDepartmentById(int id);
-    List<Department> findAll();
+    Department queryDepartmentByDepartmentId(int departmentId);
+    List<Department> queryDepartments();
 }

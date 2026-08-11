@@ -14,15 +14,15 @@ public class DepartmentServiceImp implements DepartmentService {
     }
 
     @Override
-    public Department findDepartmentById(int id) {
-        if(id <= 0){
+    public Department queryDepartmentByDepartmentId(int departmentId) {
+        if(departmentId <= 0){
             throw new IllegalArgumentException("Department ID cannot be negative or zero.");
         }
-        return departmentDAO.findDepartmentById(id);
+        return departmentDAO.findDepartmentById(departmentId);
     }
 
     @Override
-    public List<Department> findAll() {
+    public List<Department> queryDepartments() {
         return departmentDAO.findAll();
     }
 }

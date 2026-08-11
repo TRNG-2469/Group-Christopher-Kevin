@@ -12,11 +12,11 @@ import java.util.List;
 
 public class DepartmentDAOImp implements DepartmentDAO{
     @Override
-    public Department findDepartmentById(int id) {
+    public Department queryDepartmentByDepartmentId(int departmentId) {
         String sql = "SELECT * FROM departments WHERE id = ?;";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
-            prep.setInt(1, id);
+            prep.setInt(1, departmentId);
             ResultSet result = prep.executeQuery();
             if(result.next()) {
                 return mapResultSetToDepartment(result);
@@ -28,7 +28,7 @@ public class DepartmentDAOImp implements DepartmentDAO{
     }
 
     @Override
-    public List<Department> findAll() {
+    public List<Department> queryDepartments() {
         String sql = "SELECT * FROM departments;";
         List<Department> allDepts = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){

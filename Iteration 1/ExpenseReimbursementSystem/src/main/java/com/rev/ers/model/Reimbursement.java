@@ -6,29 +6,29 @@ import com.rev.ers.enums.Type;
 import java.util.Objects;
 
 public class Reimbursement {
-    private int reimbursement_id;
+    private int reimbursementId;
     private double amount;
     private String description;
     private Type type;
     private Status status;
-    private int author_id;
-    private int resolver_id;
+    private int authorId;
+    private int resolverId;
 
     private Reimbursement() {}
 
-    public Reimbursement(int reimbursement_id, double amount, String description, Type type, Status status,
-                         int author_id, int resolver_id) {
-        this.reimbursement_id = reimbursement_id;
+    public Reimbursement(int reimbursementId, double amount, String description, Type type, Status status,
+                         int authorId, int resolverId) {
+        this.reimbursementId = reimbursementId;
         this.amount = amount;
         this.description = description;
         this.type = type;
         this.status = status;
-        this.author_id = author_id;
-        this.resolver_id = resolver_id;
+        this.authorId = authorId;
+        this.resolverId = resolverId;
     }
 
-    public int getReimbursement_id() {
-        return reimbursement_id;
+    public int getReimbursementId() {
+        return reimbursementId;
     }
 
     public double getAmount() {
@@ -47,20 +47,20 @@ public class Reimbursement {
         return status;
     }
 
-    public int getAuthor_id() {
-        return author_id;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public int getResolver_id() {
-        return resolver_id;
+    public int getResolverId() {
+        return resolverId;
     }
 
-    public void setResolver_id(int resolver_id) {
-        this.resolver_id = resolver_id;
+    public void setResolverId(int resolverId) {
+        this.resolverId = resolverId;
     }
 
-    public void setAuthor_id(int author_id) {
-        this.author_id = author_id;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public void setStatus(Status status) {
@@ -79,30 +79,31 @@ public class Reimbursement {
         this.amount = amount;
     }
 
-    public void setReimbursement_id(int reimbursement_id) {
-        this.reimbursement_id = reimbursement_id;
+
+    public void setReimbursementId(int reimbursementId) {
+        this.reimbursementId = reimbursementId;
     }
 
     @Override
     public String toString() {
         return "Reimbursement{" +
-                "reimbursement_id=" + reimbursement_id +
+                "reimbursement_id=" + reimbursementId +
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
                 ", type=" + type +
                 ", status=" + status +
-                ", author_id=" + author_id +
-                ", resolver_id=" + resolver_id +
+                ", author_id=" + authorId +
+                ", resolver_id=" + resolverId +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Reimbursement that)) return false;
-        return getReimbursement_id() == that.getReimbursement_id() &&
+        return getReimbursementId() == that.getReimbursementId() &&
                 Double.compare(getAmount(), that.getAmount()) == 0 &&
-                getAuthor_id() == that.getAuthor_id() &&
-                getResolver_id() == that.getResolver_id() &&
+                getAuthorId() == that.getAuthorId() &&
+                getResolverId() == that.getResolverId() &&
                 Objects.equals(getDescription(), that.getDescription()) &&
                 getType() == that.getType() &&
                 getStatus() == that.getStatus();
@@ -110,7 +111,7 @@ public class Reimbursement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getReimbursement_id(), getAmount(), getDescription(),
-                getType(), getStatus(), getAuthor_id(), getResolver_id());
+        return Objects.hash(getReimbursementId(), getAmount(), getDescription(),
+                getType(), getStatus(), getAuthorId(), getResolverId());
     }
 }

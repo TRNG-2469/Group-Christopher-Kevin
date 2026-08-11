@@ -50,7 +50,7 @@ public class App {
                 ctx.status(401).result("You must be logged in.");
                 ctx.skipRemainingHandlers();
             }
-            if (user.getUser_id() != Integer.parseInt(ctx.pathParam("id"))) {
+            if (user.getUserId() != Integer.parseInt(ctx.pathParam("id"))) {
                 ctx.status(403).result("You can only access your own reimbursements.");
                 ctx.skipRemainingHandlers();
             }

@@ -16,7 +16,7 @@ public class DepartmentHandlerImp implements DepartmentHandler {
     @Override
     public void findDepartmentById(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));
-        Department foundDepartment = departmentService.findDepartmentById(id);
+        Department foundDepartment = departmentService.queryDepartmentByDepartmentId(id);
         if (foundDepartment != null) {
             ctx.status(200).json(foundDepartment);
         } else {
@@ -26,7 +26,7 @@ public class DepartmentHandlerImp implements DepartmentHandler {
 
     @Override
     public void findAll(Context ctx) {
-        List<Department> departments = departmentService.findAll();
+        List<Department> departments = departmentService.queryDepartments();
         ctx.status(200).json(departments);
     }
 }

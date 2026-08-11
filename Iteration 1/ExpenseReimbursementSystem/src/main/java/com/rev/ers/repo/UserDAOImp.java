@@ -31,7 +31,7 @@ public class UserDAOImp implements UserDAO {
 
     @Override
     public User register(User user) {
-        String sql = "INSERT INTO users (username, password, first_name, last_name, role, deptartment_id) VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, first_name, last_name, role, department_id) VALUES(?, ?, ?, ?, ?, ?)";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setString(1, user.getUsername());
@@ -39,7 +39,7 @@ public class UserDAOImp implements UserDAO {
             prep.setString(3, user.getFirstName());
             prep.setString(4, user.getLastName());
             prep.setString(5, user.getRole().getDbValue());
-            prep.setInt(6, user.getDepartment_id());
+            prep.setInt(6, user.getDepartmentId());
             prep.executeUpdate();
             return user;
         } catch (SQLException e){
