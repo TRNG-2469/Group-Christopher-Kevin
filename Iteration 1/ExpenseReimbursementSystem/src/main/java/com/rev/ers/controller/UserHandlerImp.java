@@ -38,6 +38,11 @@ public class UserHandlerImp implements UserHandler{
         }
     }
 
+    public void logout(Context ctx) {
+        ctx.req().getSession().invalidate();
+        ctx.status(200).result("Logged out successfully.");
+    }
+
     public void requireLogin(Context ctx) {
         User user = ctx.sessionAttribute("user");
         if (user == null) {

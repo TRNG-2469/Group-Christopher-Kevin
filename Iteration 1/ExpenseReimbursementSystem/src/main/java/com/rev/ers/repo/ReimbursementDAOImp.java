@@ -65,7 +65,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
 
     @Override
     public List<Reimbursement> queryReimbursementsByAuthorId(int authorId, Status status) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM reimbursements WHERE author = ?");
+        StringBuilder sql = new StringBuilder("SELECT * FROM reimbursements WHERE author_id = ?");
         if (status != null) {
             sql.append(" AND status = ?");
         }
@@ -90,7 +90,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
 
     @Override
     public Reimbursement queryReimbursementByReimbursementId(int reimbursementId) {
-        String sql = "SELECT * FROM reimbursements WHERE id = ?;";
+        String sql = "SELECT * FROM reimbursements WHERE reimbursement_id = ?;";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setInt(1, reimbursementId);
@@ -108,7 +108,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
 
     @Override
     public Reimbursement updateReimbursement(Reimbursement reimbursement) {
-        String sql = "UPDATE reimbursement SET amount = ?, description = ?, type = ?, status = ?, resolver = ?;";
+        String sql = "UPDATE reimbursement SET amount = ?, description = ?, type = ?, status = ?, resolver_id = ?;";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setDouble(1, reimbursement.getAmount());

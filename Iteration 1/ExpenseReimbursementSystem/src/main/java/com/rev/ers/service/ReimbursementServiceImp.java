@@ -66,7 +66,7 @@ public class ReimbursementServiceImp implements ReimbursementService{
     }
 
     @Override
-    public void resolveReimbursement(int reimbursementId, User manager, Status status) {
+    public Reimbursement resolveReimbursement(int reimbursementId, User manager, Status status) {
         if(status == Status.PENDING) {
             throw new IllegalArgumentException("Cannot set status to PENDING when resolving a reimbursement.");
         }
@@ -79,7 +79,7 @@ public class ReimbursementServiceImp implements ReimbursementService{
         }
         original.setStatus(status);
         original.setResolverId(manager.getUserId());
-        reimbursementDAO.updateReimbursement(original);
+        return reimbursementDAO.updateReimbursement(original);
     }
 
     private void validation(Reimbursement reimbursement) {

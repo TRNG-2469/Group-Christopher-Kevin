@@ -13,7 +13,7 @@ import java.util.List;
 public class DepartmentDAOImp implements DepartmentDAO{
     @Override
     public Department queryDepartmentByDepartmentId(int departmentId) {
-        String sql = "SELECT * FROM departments WHERE id = ?;";
+        String sql = "SELECT * FROM departments WHERE department_id = ?;";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setInt(1, departmentId);

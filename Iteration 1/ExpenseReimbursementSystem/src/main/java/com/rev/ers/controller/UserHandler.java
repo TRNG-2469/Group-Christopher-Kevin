@@ -6,4 +6,5 @@ import io.javalin.http.Context;
 public interface UserHandler {
     public void login(Context ctx);
     public void register(Context ctx);
+    public void logout(Context ctx);
 }

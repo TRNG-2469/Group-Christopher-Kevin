@@ -43,13 +43,13 @@ public class ReimbursementHandlerImp implements ReimbursementHandler {
         if (!reimbursements.isEmpty()) {
             ctx.status(200).json(reimbursements);
         } else {
-            ctx.status(404).result("No reimbursements found.");
+            ctx.status(200).result("No reimbursements found.");
         }
     }
 
     @Override
     public void queryReimbursementByAuthorId(Context ctx) {
-        int authorId = Integer.parseInt(ctx.pathParam("authorId"));
+        int authorId = Integer.parseInt(ctx.pathParam("userId"));
         Status status = null;
         if (ctx.queryParam("status") != null) {
             try {
@@ -63,7 +63,7 @@ public class ReimbursementHandlerImp implements ReimbursementHandler {
         if (!reimbursements.isEmpty()) {
             ctx.status(200).json(reimbursements);
         } else {
-            ctx.status(404).result("No reimbursements found.");
+            ctx.status(200).result("No reimbursements found.");
         }
     }
 
@@ -78,18 +78,15 @@ public class ReimbursementHandlerImp implements ReimbursementHandler {
 
     @Override
     public void resolveReimbursement(Context ctx) {
+        Reimbursement resolution = ctx.bodyAsClass(Reimbursement.class);
+        Status status = resolution.getStatus();
         int reimbursementId = Integer.parseInt(ctx.pathParam("reimbursementId"));
-        Status status = null;
-        if (ctx.queryParam("status") != null) {
-            try {
-                status = Status.valueOf(ctx.queryParam("status").toUpperCase());
-            } catch (IllegalArgumentException e) {
-                ctx.status(400).result("Invalid status: " + ctx.queryParam("status"));
-                return;
-            }
+        if (status == null) {
+            ctx.status(400).result("Status parameter is required.");
+            return;
         }
         User manager = ctx.sessionAttribute("user");
-        reimbursementService.resolveReimbursement(reimbursementId, manager, status);
-        ctx.status(200).result("Reimbursement updated successfully.");
+        Reimbursement updatedReimbursement = reimbursementService.resolveReimbursement(reimbursementId, manager, status);
+        ctx.status(200).json(updatedReimbursement);
     }
 }

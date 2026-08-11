@@ -36,10 +36,7 @@ public class App {
 
         app.post("/register", userHandler::register);
         app.post("/login", userHandler::login);
-        app.post("/logout", ctx -> {
-            ctx.sessionAttribute("user", null);
-            ctx.status(200).result("Logged out successfully.");
-        });
+        app.post("/logout", userHandler::logout);
 
         app.get("/departments/{id}", departmentHandler::findDepartmentById);
         app.get("/departments", departmentHandler::findAll);
@@ -50,7 +47,7 @@ public class App {
                 ctx.status(401).result("You must be logged in.");
                 ctx.skipRemainingHandlers();
             }
-            if (user.getUserId() != Integer.parseInt(ctx.pathParam("id"))) {
+            if (user.getUserId() != Integer.parseInt(ctx.pathParam("userId"))) {
                 ctx.status(403).result("You can only access your own reimbursements.");
                 ctx.skipRemainingHandlers();
             }
@@ -74,7 +71,7 @@ public class App {
         });
 
         app.get("/manager/reimbursements", reimbursementHandler::queryReimbursements);
-        app.patch("/manager/reimbursements/{reimbursementId}/{status}", reimbursementHandler::resolveReimbursement);
+        app.patch("/manager/reimbursements/{reimbursementId}", reimbursementHandler::resolveReimbursement);
 
         app.after(ctx ->  {
             if(ctx.statusCode() == 200 || ctx.statusCode() == 201) {
