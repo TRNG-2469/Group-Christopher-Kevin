@@ -18,11 +18,11 @@ public class DepartmentServiceImp implements DepartmentService {
         if(departmentId <= 0){
             throw new IllegalArgumentException("Department ID cannot be negative or zero.");
         }
-        return departmentDAO.findDepartmentById(departmentId);
+        return departmentDAO.queryDepartmentByDepartmentId(departmentId);
     }
 
     @Override
     public List<Department> queryDepartments() {
-        return departmentDAO.findAll();
+        return departmentDAO.queryDepartments();
     }
 }
