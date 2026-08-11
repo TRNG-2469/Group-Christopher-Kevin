@@ -8,19 +8,21 @@ public class ConnectionFactory {
     private String url;
     private String username;
     private String password;
+    private String forName;
 
     private ConnectionFactory() {
         Dotenv dotenv = Dotenv.configure().load();
         url = dotenv.get("DATABASE_URL");
         username = dotenv.get("DATABASE_USERNAME");
-        password = dotenv.get("DATABASE_PASSWORD");
+        password = dotenv.get("DATABASE_PASSWORD") == null ? "" : dotenv.get("DATABASE_PASSWORD");
+        forName = dotenv.get("DATABASE_FORNAME");
 
-        if (this.url == null || this.username == null || this.password == null) {
+        if (this.url == null || this.username == null || this.password == null || this.forName == null) {
             throw new IllegalStateException("Critical Error: Database environment variables not configured.");
         }
 
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName(forName);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("PostgreSQL JDBC driver not found on classpath.", e);
         }
