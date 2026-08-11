@@ -6,9 +6,13 @@ import com.rev.ers.model.Reimbursement;
 import java.util.List;
 
 public interface ReimbursementDAO {
-    void create(Reimbursement reimbursement);
-    void update(Reimbursement reimbursement);
-    Reimbursement findById(int id);
-    List<Reimbursement> findByAuthor(int id, Status status);
-    List<Reimbursement> findAll(Status status, Integer departmentId);
+    // Create
+    void createReimbursement(Reimbursement reimbursement);
+    // Read
+    List<Reimbursement> queryReimbursements(Status status, Integer departmentId);
+    List<Reimbursement> queryReimbursementsByAuthorId(int id, Status status);
+    Reimbursement queryReimbursementByReimbursementId(int id);
+    // Update
+    Reimbursement updateReimbursement(Reimbursement reimbursement);
+
 }

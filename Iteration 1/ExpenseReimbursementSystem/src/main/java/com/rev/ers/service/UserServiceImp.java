@@ -24,16 +24,23 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public boolean authenticate(String username, String password) {
+    public User login(String username, String password) {
         // Ensures username and password are not null or empty
-        if (username == null || username.isBlank() || password == null || password.isBlank()) {
+        if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Username or password cannot be null or empty.");
         }
-        String storedPassword = userDAO.authenticate(username);
-        if (storedPassword == null) {
-            return false;
+        User user = searchByUsername(username);
+        if(user == null) {
+            return null;
         }
-        return BCrypt.checkpw(password, storedPassword);
+        String storedPassword = user.getPassword();
+        if(storedPassword == null) {
+            return null;
+        }
+        if(BCrypt.checkpw(password, storedPassword)) {
+            return user;
+        }
+        return null;
     }
 
     @Override

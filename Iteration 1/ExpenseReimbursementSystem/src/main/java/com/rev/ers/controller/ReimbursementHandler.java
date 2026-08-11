@@ -3,9 +3,12 @@ package com.rev.ers.controller;
 import io.javalin.http.Context;
 
 public interface ReimbursementHandler {
-    void create(Context ctx);
-    void update(Context ctx);
-
-    void findByAuthor(Context ctx);
-    void findAll(Context ctx);
+    // Create
+    void createReimbursement(Context ctx);
+    // Read
+    void queryReimbursements(Context ctx);
+    void queryReimbursementByAuthorId(Context ctx);
+    // Update
+    void updateReimbursement(Context ctx);
+    void resolveReimbursement(Context ctx);
 }

@@ -2,6 +2,7 @@ package com.rev.ers.controller;
 
 import com.rev.ers.enums.Status;
 import com.rev.ers.model.Reimbursement;
+import com.rev.ers.model.User;
 import com.rev.ers.service.ReimbursementService;
 import io.javalin.http.Context;
 
@@ -14,67 +15,81 @@ public class ReimbursementHandlerImp implements ReimbursementHandler {
         this.reimbursementService = reimbursementService;
     }
 
+    // Create
+
     @Override
-    public void create(Context ctx) {
+    public void createReimbursement(Context ctx) {
+        User author = ctx.sessionAttribute("user");
         Reimbursement reimbursement = ctx.bodyAsClass(Reimbursement.class);
-        reimbursementService.create(reimbursement);
+        reimbursementService.createReimbursement(reimbursement, author);
         ctx.status(201).result("Reimbursement created successfully.");
     }
 
+    // Read
+
     @Override
-    public void update(Context ctx) {
+    public void queryReimbursements(Context ctx) {
+        Integer departmentId = ctx.queryParam("departmentId") != null ? Integer.valueOf(ctx.queryParam("departmentId")) : null;
+        Status status = null;
+        if (ctx.queryParam("status") != null) {
+            try {
+                status = Status.valueOf(ctx.queryParam("status").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                ctx.status(400).result("Invalid status: " + ctx.queryParam("status"));
+                return;
+            }
+        }
+        List<Reimbursement> reimbursements = reimbursementService.queryReimbursements(status, departmentId);
+        if (!reimbursements.isEmpty()) {
+            ctx.status(200).json(reimbursements);
+        } else {
+            ctx.status(404).result("No reimbursements found.");
+        }
+    }
+
+    @Override
+    public void queryReimbursementByAuthorId(Context ctx) {
+        int authorId = Integer.parseInt(ctx.pathParam("authorId"));
+        Status status = null;
+        if (ctx.queryParam("status") != null) {
+            try {
+                status = Status.valueOf(ctx.queryParam("status").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                ctx.status(400).result("Invalid status: " + ctx.queryParam("status"));
+                return;
+            }
+        }
+        List<Reimbursement> reimbursements = reimbursementService.queryReimbursementsByAuthorId(authorId, status);
+        if (!reimbursements.isEmpty()) {
+            ctx.status(200).json(reimbursements);
+        } else {
+            ctx.status(404).result("No reimbursements found.");
+        }
+    }
+
+    // Update
+
+    @Override
+    public void updateReimbursement(Context ctx) {
         Reimbursement reimbursement = ctx.bodyAsClass(Reimbursement.class);
-        reimbursementService.update(reimbursement);
+        Reimbursement updatedReimbursement = reimbursementService.updateReimbursement(reimbursement);
+        ctx.status(200).json(updatedReimbursement);
+    }
+
+    @Override
+    public void resolveReimbursement(Context ctx) {
+        int reimbursementId = Integer.parseInt(ctx.pathParam("reimbursementId"));
+        Status status = null;
+        if (ctx.queryParam("status") != null) {
+            try {
+                status = Status.valueOf(ctx.queryParam("status").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                ctx.status(400).result("Invalid status: " + ctx.queryParam("status"));
+                return;
+            }
+        }
+        User manager = ctx.sessionAttribute("user");
+        reimbursementService.resolveReimbursement(reimbursementId, manager, status);
         ctx.status(200).result("Reimbursement updated successfully.");
-    }
-
-    @Override
-    public void findByAuthor(Context ctx) {
-        int authorId = 0;
-        Status status = null;
-        String statusParam = ctx.queryParam("status");
-        if (statusParam != null) {
-            try {
-                status = Status.valueOf(statusParam.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid status.");
-            }
-        }
-        try {
-            authorId = Integer.parseInt(ctx.pathParam("id"));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid user ID.");
-        }
-        List<Reimbursement> reimbursements = reimbursementService.findByAuthor(authorId, status);
-        if (!reimbursements.isEmpty()) {
-            ctx.status(200).json(reimbursements);
-        } else {
-            ctx.status(404).result("No reimbursements found.");
-        }
-    }
-
-    @Override
-    public void findAll(Context ctx) {
-        int departmentId = 0;
-        Status status = null;
-        String statusParam = ctx.queryParam("status");
-        if (statusParam != null) {
-            try {
-                status = Status.valueOf(statusParam.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid status.");
-            }
-        }
-        try {
-            departmentId = Integer.parseInt(ctx.pathParam("department_id"));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid department ID.");
-        }
-        List<Reimbursement> reimbursements = reimbursementService.findAll(status, departmentId);
-        if (!reimbursements.isEmpty()) {
-            ctx.status(200).json(reimbursements);
-        } else {
-            ctx.status(404).result("No reimbursements found.");
-        }
     }
 }

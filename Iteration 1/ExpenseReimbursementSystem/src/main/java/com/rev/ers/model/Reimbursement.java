@@ -55,6 +55,34 @@ public class Reimbursement {
         return resolver_id;
     }
 
+    public void setResolver_id(int resolver_id) {
+        this.resolver_id = resolver_id;
+    }
+
+    public void setAuthor_id(int author_id) {
+        this.author_id = author_id;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setReimbursement_id(int reimbursement_id) {
+        this.reimbursement_id = reimbursement_id;
+    }
+
     @Override
     public String toString() {
         return "Reimbursement{" +

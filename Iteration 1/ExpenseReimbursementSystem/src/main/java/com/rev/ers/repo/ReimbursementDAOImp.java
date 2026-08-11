@@ -13,41 +13,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReimbursementDAOImp implements ReimbursementDAO{
+
+    // Create
+
     @Override
-    public void create(Reimbursement reimbursement) {
-        String sql = "INSERT INTO reimbursement VALUES(?, ?, ?, ?, ?, ?)";
+    public void createReimbursement(Reimbursement reimbursement) {
+        String sql = "INSERT INTO reimbursement(amount, description, type, author_id) VALUES(?, ?, ?, ?)";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setDouble(1, reimbursement.getAmount());
             prep.setString(2, reimbursement.getDescription());
             prep.setString(3, reimbursement.getType().getDbValue());
-            prep.setString(4, reimbursement.getStatus().getDbValue());
-            prep.setInt(5, reimbursement.getAuthor_id());
-            prep.setInt(6, reimbursement.getResolver_id());
+            prep.setInt(4, reimbursement.getAuthor_id());
             prep.executeUpdate();
         } catch(SQLException e){
             throw new RuntimeException("Database error", e);
         }
     }
 
-    @Override
-    public void update(Reimbursement reimbursement) {
-        String sql = "UPDATE reimbursement SET amount = ?, description = ?, type = ?, status = ?, resolver = ?;";
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement prep = conn.prepareStatement(sql);
-            prep.setDouble(1, reimbursement.getAmount());
-            prep.setString(2, reimbursement.getDescription());
-            prep.setString(3, reimbursement.getType().getDbValue());
-            prep.setString(4, reimbursement.getStatus().getDbValue());
-            prep.setInt(5, reimbursement.getResolver_id());
-            prep.executeUpdate();
-        } catch(SQLException e){
-            throw new RuntimeException("Database error", e);
-        }
-    }
+    // Read
 
     @Override
-    public Reimbursement findById(int id) {
+    public Reimbursement queryReimbursementByReimbursementId(int id) {
         String sql = "SELECT * FROM reimbursements WHERE id = ?;";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
@@ -63,7 +50,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
     }
 
     @Override
-    public List<Reimbursement> findByAuthor(int id, Status status) {
+    public List<Reimbursement> queryReimbursementsByAuthorId(int id, Status status) {
         StringBuilder sql = new StringBuilder("SELECT * FROM reimbursements WHERE author = ?");
         if (status != null) {
             sql.append(" AND status = ?");
@@ -72,7 +59,11 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
         List<Reimbursement> allReimbs = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql.toString());
-            prep.setInt(1, id);
+            int paramIndex = 1;
+            prep.setInt(paramIndex++, id);
+            if (status != null) {
+                prep.setString(paramIndex++, status.getDbValue());
+            }
             ResultSet result = prep.executeQuery();
             while(result.next()){
                 allReimbs.add(mapResultSetToReimbursement(result));
@@ -84,7 +75,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
     }
 
     @Override
-    public List<Reimbursement> findAll(Status status, Integer departmentId) {
+    public List<Reimbursement> queryReimbursements(Status status, Integer departmentId) {
         StringBuilder sql = new StringBuilder("SELECT * FROM reimbursements WHERE 1 = 1");
         if (status != null) {
             sql.append(" AND status = ?");
@@ -96,6 +87,13 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
         List<Reimbursement> allReimbs = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql.toString());
+            int paramIndex = 1;
+            if (status != null) {
+                prep.setString(paramIndex++, status.getDbValue());
+            }
+            if (departmentId != null) {
+                prep.setInt(paramIndex++, departmentId);
+            }
             ResultSet result = prep.executeQuery();
             while(result.next()){
                 allReimbs.add(mapResultSetToReimbursement(result));
@@ -104,6 +102,25 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
         } catch(SQLException e){
             throw new RuntimeException("Database error", e);
         }
+    }
+
+    // Update
+
+    @Override
+    public Reimbursement updateReimbursement(Reimbursement reimbursement) {
+        String sql = "UPDATE reimbursement SET amount = ?, description = ?, type = ?, status = ?, resolver = ?;";
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement prep = conn.prepareStatement(sql);
+            prep.setDouble(1, reimbursement.getAmount());
+            prep.setString(2, reimbursement.getDescription());
+            prep.setString(3, reimbursement.getType().getDbValue());
+            prep.setString(4, reimbursement.getStatus().getDbValue());
+            prep.setInt(5, reimbursement.getResolver_id());
+            prep.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Database error", e);
+        }
+        return reimbursement;
     }
 
     private Reimbursement mapResultSetToReimbursement(ResultSet result) throws SQLException {

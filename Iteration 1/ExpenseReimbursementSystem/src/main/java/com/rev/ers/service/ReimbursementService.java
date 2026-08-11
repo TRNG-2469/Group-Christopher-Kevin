@@ -2,12 +2,18 @@ package com.rev.ers.service;
 
 import com.rev.ers.enums.Status;
 import com.rev.ers.model.Reimbursement;
+import com.rev.ers.model.User;
+
 import java.util.List;
 
 public interface ReimbursementService {
-    void create(Reimbursement reimbursement);
-    void update(Reimbursement reimbursement);
-    Reimbursement findById(int id);
-    List<Reimbursement> findByAuthor(int id, Status status);
-    List<Reimbursement> findAll(Status status, Integer departmentId);
+    // Create
+    void createReimbursement(Reimbursement reimbursement, User author);
+    // Read
+    List<Reimbursement> queryReimbursements(Status status, Integer departmentId);
+    List<Reimbursement> queryReimbursementsByAuthorId(int authorId, Status status);
+    Reimbursement queryReimbursementByReimbursementId(int reimbursementId);
+    // Update
+    Reimbursement updateReimbursement(Reimbursement reimbursement);
+    void resolveReimbursement(int id, User manager, Status status);
 }

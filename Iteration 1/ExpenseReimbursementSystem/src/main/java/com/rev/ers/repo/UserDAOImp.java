@@ -29,22 +29,6 @@ public class UserDAOImp implements UserDAO {
         return null;
     }
 
-    public String authenticate(String username){
-        String sql = "SELECT password FROM users WHERE username = ?";
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement prep = conn.prepareStatement(sql);
-            prep.setString(1, username);
-            try (ResultSet result = prep.executeQuery()){
-                if (result.next()) {
-                    return result.getString("password");
-                }
-            }
-        } catch (SQLException e){
-            throw new RuntimeException("Database error", e);
-        }
-        return null;
-    }
-
     @Override
     public User register(User user) {
         String sql = "INSERT INTO users (username, password, first_name, last_name, role, deptartment_id) VALUES(?, ?, ?, ?, ?, ?)";

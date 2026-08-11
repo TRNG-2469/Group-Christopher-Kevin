@@ -1,6 +1,8 @@
 package com.rev.ers;
 
 import com.rev.ers.controller.*;
+import com.rev.ers.enums.Role;
+import com.rev.ers.model.User;
 import com.rev.ers.repo.*;
 import com.rev.ers.service.*;
 
@@ -26,10 +28,14 @@ public class App {
 
         Javalin app = Javalin.create().start(7000);
 
+        app.before(ctx -> {
+            logger.info("Attempting request - Method: {} | Path: {}", ctx.method(), ctx.path());
+        });
+
         app.get("/", ctx -> ctx.result("Hello World"));
 
         app.post("/register", userHandler::register);
-        app.post("/login", userHandler::authenticate);
+        app.post("/login", userHandler::login);
         app.post("/logout", ctx -> {
             ctx.sessionAttribute("user", null);
             ctx.status(200).result("Logged out successfully.");
@@ -38,14 +44,37 @@ public class App {
         app.get("/departments/{id}", departmentHandler::findDepartmentById);
         app.get("/departments", departmentHandler::findAll);
 
-        app.post("/reimbursements", reimbursementHandler::create);
-        app.put("/reimbursements/{id}", reimbursementHandler::update);
-        app.get("/reimbursements", reimbursementHandler::findAll);
-        app.get("/reimbursements/{id}", reimbursementHandler::findByAuthor);
-
-        app.before(ctx -> {
-            logger.info("Attempting request - Method: {} | Path: {}", ctx.method(), ctx.path());
+        app.before("/reimbursements/*", ctx -> {
+            User user = ctx.sessionAttribute("user");
+            if (user == null) {
+                ctx.status(401).result("You must be logged in.");
+                ctx.skipRemainingHandlers();
+            }
+            if (user.getUser_id() != Integer.parseInt(ctx.pathParam("id"))) {
+                ctx.status(403).result("You can only access your own reimbursements.");
+                ctx.skipRemainingHandlers();
+            }
         });
+
+        app.post("/reimbursements", reimbursementHandler::createReimbursement);
+        app.get("/reimbursements/{userId}", reimbursementHandler::queryReimbursementByAuthorId);
+        app.patch("/reimbursements/{userId}", reimbursementHandler::updateReimbursement);
+
+        app.before("/manager/*", ctx -> {
+            User user = ctx.sessionAttribute("user");
+            if (user == null) {
+                ctx.status(401).result("You must be logged in.");
+                ctx.skipRemainingHandlers();
+                return;
+            }
+            if (user.getRole() != Role.MANAGER) {
+                ctx.status(403).result("Manager access required.");
+                ctx.skipRemainingHandlers();
+            }
+        });
+
+        app.get("/manager/reimbursements", reimbursementHandler::queryReimbursements);
+        app.patch("/manager/reimbursements/{reimbursementId}/{status}", reimbursementHandler::resolveReimbursement);
 
         app.after(ctx ->  {
             if(ctx.statusCode() == 200 || ctx.statusCode() == 201) {
