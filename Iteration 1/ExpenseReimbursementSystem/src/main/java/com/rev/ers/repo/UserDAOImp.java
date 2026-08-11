@@ -3,10 +3,7 @@ package com.rev.ers.repo;
 import com.rev.ers.model.User;
 import com.rev.ers.utils.ConnectionFactory;
 import com.rev.ers.utils.UserFactory;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class UserDAOImp implements UserDAO {
     @Override
@@ -33,7 +30,7 @@ public class UserDAOImp implements UserDAO {
     public User register(User user) {
         String sql = "INSERT INTO users (username, password, first_name, last_name, role, department_id) VALUES(?, ?, ?, ?, ?, ?)";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement prep = conn.prepareStatement(sql);
+            PreparedStatement prep = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             prep.setString(1, user.getUsername());
             prep.setString(2, user.getPassword());
             prep.setString(3, user.getFirstName());
@@ -41,9 +38,16 @@ public class UserDAOImp implements UserDAO {
             prep.setString(5, user.getRole().getDbValue());
             prep.setInt(6, user.getDepartmentId());
             prep.executeUpdate();
-            return user;
+            try (ResultSet generatedKeys = prep.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    user.setUserId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
         } catch (SQLException e){
             throw new RuntimeException("Database error", e);
         }
+        return user;
     }
 }

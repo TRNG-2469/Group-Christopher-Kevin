@@ -17,9 +17,10 @@ public class DepartmentDAOImp implements DepartmentDAO{
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setInt(1, departmentId);
-            ResultSet result = prep.executeQuery();
-            if(result.next()) {
-                return mapResultSetToDepartment(result);
+            try(ResultSet result = prep.executeQuery()) {
+                if(result.next()) {
+                    return mapResultSetToDepartment(result);
+                }
             }
         } catch(SQLException e){
             throw new RuntimeException("Database error", e);
@@ -33,9 +34,10 @@ public class DepartmentDAOImp implements DepartmentDAO{
         List<Department> allDepts = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
-            ResultSet result = prep.executeQuery();
-            while(result.next()){
-                allDepts.add(mapResultSetToDepartment(result));
+            try(ResultSet result = prep.executeQuery()) {
+                while(result.next()){
+                    allDepts.add(mapResultSetToDepartment(result));
+                }
             }
             return allDepts;
         } catch(SQLException e){

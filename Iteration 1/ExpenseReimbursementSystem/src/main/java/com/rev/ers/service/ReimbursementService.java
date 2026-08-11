@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReimbursementService {
     // Create
-    void createReimbursement(Reimbursement reimbursement, User author);
+    Reimbursement createReimbursement(Reimbursement reimbursement, User author);
     // Read
     List<Reimbursement> queryReimbursements(Status status, Integer departmentId);
     List<Reimbursement> queryReimbursementsByAuthorId(int authorId, Status status);

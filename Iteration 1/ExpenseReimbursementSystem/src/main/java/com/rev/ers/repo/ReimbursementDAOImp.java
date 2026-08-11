@@ -5,10 +5,7 @@ import com.rev.ers.enums.Type;
 import com.rev.ers.model.Reimbursement;
 import com.rev.ers.utils.ConnectionFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,18 +14,26 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
     // Create
 
     @Override
-    public void createReimbursement(Reimbursement reimbursement) {
-        String sql = "INSERT INTO reimbursement(amount, description, type, author_id) VALUES(?, ?, ?, ?)";
+    public Reimbursement createReimbursement(Reimbursement reimbursement) {
+        String sql = "INSERT INTO reimbursements(amount, description, type, author_id) VALUES(?, ?, ?, ?)";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement prep = conn.prepareStatement(sql);
+            PreparedStatement prep = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             prep.setDouble(1, reimbursement.getAmount());
             prep.setString(2, reimbursement.getDescription());
             prep.setString(3, reimbursement.getType().getDbValue());
             prep.setInt(4, reimbursement.getAuthorId());
             prep.executeUpdate();
+            try (ResultSet generatedKeys = prep.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    reimbursement.setReimbursementId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating reimbursement failed, no ID obtained.");
+                }
+            }
         } catch(SQLException e){
             throw new RuntimeException("Database error", e);
         }
+        return reimbursement;
     }
 
     // Read
@@ -53,9 +58,10 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
             if (departmentId != null) {
                 prep.setInt(paramIndex++, departmentId);
             }
-            ResultSet result = prep.executeQuery();
-            while(result.next()){
-                allReimbs.add(mapResultSetToReimbursement(result));
+            try(ResultSet result = prep.executeQuery()){
+                while(result.next()){
+                    allReimbs.add(mapResultSetToReimbursement(result));
+                }
             }
             return allReimbs;
         } catch(SQLException e){
@@ -78,9 +84,10 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
             if (status != null) {
                 prep.setString(paramIndex++, status.getDbValue());
             }
-            ResultSet result = prep.executeQuery();
-            while(result.next()){
-                allReimbs.add(mapResultSetToReimbursement(result));
+            try(ResultSet result = prep.executeQuery()){
+                while(result.next()){
+                    allReimbs.add(mapResultSetToReimbursement(result));
+                }
             }
             return allReimbs;
         } catch(SQLException e){
@@ -94,9 +101,10 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setInt(1, reimbursementId);
-            ResultSet result = prep.executeQuery();
-            if(result.next()){
-                return mapResultSetToReimbursement(result);
+            try(ResultSet result = prep.executeQuery()){
+                if(result.next()){
+                    return mapResultSetToReimbursement(result);
+                }
             }
         } catch(SQLException e){
             throw new RuntimeException("Database error", e);
@@ -108,7 +116,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
 
     @Override
     public Reimbursement updateReimbursement(Reimbursement reimbursement) {
-        String sql = "UPDATE reimbursement SET amount = ?, description = ?, type = ?, status = ?, resolver_id = ?;";
+        String sql = "UPDATE reimbursements SET amount = ?, description = ?, type = ?, status = ?, resolver_id = ? WHERE reimbursement_id = ?;";
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement prep = conn.prepareStatement(sql);
             prep.setDouble(1, reimbursement.getAmount());
@@ -116,6 +124,7 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
             prep.setString(3, reimbursement.getType().getDbValue());
             prep.setString(4, reimbursement.getStatus().getDbValue());
             prep.setInt(5, reimbursement.getResolverId());
+            prep.setInt(6, reimbursement.getReimbursementId());
             prep.executeUpdate();
         } catch(SQLException e){
             throw new RuntimeException("Database error", e);

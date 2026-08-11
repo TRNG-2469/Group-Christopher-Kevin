@@ -16,10 +16,11 @@ public class ReimbursementServiceImp implements ReimbursementService{
     // Create
 
     @Override
-    public void createReimbursement(Reimbursement reimbursement, User author) {
-        validation(reimbursement);
+    public Reimbursement createReimbursement(Reimbursement reimbursement, User author) {
         reimbursement.setAuthorId(author.getUserId());
-        reimbursementDAO.createReimbursement(reimbursement);
+        reimbursement.setStatus(Status.PENDING);
+        validation(reimbursement);
+        return reimbursementDAO.createReimbursement(reimbursement);
     }
 
     // Read
@@ -62,6 +63,7 @@ public class ReimbursementServiceImp implements ReimbursementService{
         if(original.getStatus() == Status.APPROVED || original.getStatus() == Status.DENIED) {
             throw new IllegalArgumentException("Cannot update a reimbursement that has been approved or denied.");
         }
+        reimbursement.setReimbursementId(original.getReimbursementId());
         return reimbursementDAO.updateReimbursement(reimbursement);
     }
 
@@ -87,8 +89,6 @@ public class ReimbursementServiceImp implements ReimbursementService{
             throw new IllegalArgumentException("Reimbursement amount cannot be negative or zero.");
         } else if(reimbursement.getDescription() == null || reimbursement.getDescription().isBlank()){
             throw new IllegalArgumentException("Description cannot be null or blank.");
-        } else if(reimbursement.getAuthorId() <= 0){
-            throw new IllegalArgumentException("Author ID cannot be negative or zero.");
         }
     }
 }

@@ -16,7 +16,6 @@ public class UserServiceImp implements UserService{
 
     @Override
     public User searchByUsername(String username) {
-        // Ensures username input is valid
         if(username == null || username.isEmpty()){
             throw new IllegalArgumentException("Username cannot be null or empty.");
         }
@@ -25,9 +24,8 @@ public class UserServiceImp implements UserService{
 
     @Override
     public User login(String username, String password) {
-        // Ensures username and password are not null or empty
         if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Username or password cannot be null or empty.");
+            throw new IllegalArgumentException("Password cannot be null or empty.");
         }
         User user = searchByUsername(username);
         if(user == null) {
@@ -45,27 +43,23 @@ public class UserServiceImp implements UserService{
 
     @Override
     public User register(User user) {
-        // Ensures user is not null
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null.");
         }
-        // Ensures username does not already exist and username input is valid
         if(searchByUsername(user.getUsername()) != null){
             throw new IllegalArgumentException("Username already exists.");
         }
-        // Ensures password is not null or empty
         if(user.getPassword() == null || user.getPassword().isBlank()){
-            throw new IllegalArgumentException("Username or password cannot be null or blank.");
+            throw new IllegalArgumentException("Password cannot be null or blank.");
         }
-        // Ensures first and last name are not null or empty
-        if(user.getFirstName() == null || user.getFirstName().isBlank()
-                || user.getLastName() == null || user.getLastName().isBlank()){
+        if(user.getFirstName() == null || user.getFirstName().isBlank() || user.getLastName() == null || user.getLastName().isBlank()){
             throw new IllegalArgumentException("First or last name cannot be null or blank.");
         }
-        // Ensures department ID exists
         if(departmentDAO.queryDepartmentByDepartmentId(user.getDepartmentId()) == null){
             throw new IllegalArgumentException("Department ID does not exist.");
         }
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        user.setPassword(hashedPassword);
         return userDAO.register(user);
     }
 }

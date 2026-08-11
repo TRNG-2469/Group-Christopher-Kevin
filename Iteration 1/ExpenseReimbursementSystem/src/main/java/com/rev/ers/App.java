@@ -42,12 +42,14 @@ public class App {
         app.get("/departments", departmentHandler::findAll);
 
         app.before("/reimbursements/*", ctx -> {
+            String userIdParam = ctx.pathParam("userId");
+            if (userIdParam == null) return;
             User user = ctx.sessionAttribute("user");
             if (user == null) {
                 ctx.status(401).result("You must be logged in.");
                 ctx.skipRemainingHandlers();
             }
-            if (user.getUserId() != Integer.parseInt(ctx.pathParam("userId"))) {
+            if (user.getUserId() != Integer.parseInt(userIdParam)) {
                 ctx.status(403).result("You can only access your own reimbursements.");
                 ctx.skipRemainingHandlers();
             }

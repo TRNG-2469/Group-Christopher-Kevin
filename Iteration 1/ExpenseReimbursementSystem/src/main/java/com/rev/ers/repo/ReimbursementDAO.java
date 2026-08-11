@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ReimbursementDAO {
     // Create
-    void createReimbursement(Reimbursement reimbursement);
+    Reimbursement createReimbursement(Reimbursement reimbursement);
     // Read
     List<Reimbursement> queryReimbursements(Status status, Integer departmentId);
     List<Reimbursement> queryReimbursementsByAuthorId(int authorId, Status status);
