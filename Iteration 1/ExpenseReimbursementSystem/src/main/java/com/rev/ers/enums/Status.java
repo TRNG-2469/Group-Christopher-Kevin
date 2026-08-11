@@ -14,4 +14,13 @@ public enum Status {
     public String getDbValue() {
         return dbValue;
     }
+
+    public static Status fromDbValue(String value) {
+        for (Status status : values()) {
+            if (status.dbValue.equalsIgnoreCase(value)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Unknown status: " + value);
+    }
 }

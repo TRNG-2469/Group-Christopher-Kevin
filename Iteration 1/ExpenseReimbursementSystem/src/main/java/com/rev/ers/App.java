@@ -41,15 +41,19 @@ public class App {
         app.get("/departments/{id}", departmentHandler::findDepartmentById);
         app.get("/departments", departmentHandler::findAll);
 
+
         app.before("/reimbursements/*", ctx -> {
-            String userIdParam = ctx.pathParam("userId");
-            if (userIdParam == null) return;
             User user = ctx.sessionAttribute("user");
             if (user == null) {
                 ctx.status(401).result("You must be logged in.");
                 ctx.skipRemainingHandlers();
+                return;
             }
-            if (user.getUserId() != Integer.parseInt(userIdParam)) {
+        });
+        app.before("/reimbursements/{userId}", ctx -> {
+            User user = ctx.sessionAttribute("user");
+            int userId = Integer.parseInt(ctx.pathParam("userId"));
+            if (user.getUserId() != userId) {
                 ctx.status(403).result("You can only access your own reimbursements.");
                 ctx.skipRemainingHandlers();
             }

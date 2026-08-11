@@ -15,4 +15,13 @@ public enum Type {
     public String getDbValue() {
         return dbValue;
     }
+
+    public static Type fromDbValue(String value) {
+        for (Type type : values()) {
+            if (type.dbValue.equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown reimbursement type: " + value);
+    }
 }

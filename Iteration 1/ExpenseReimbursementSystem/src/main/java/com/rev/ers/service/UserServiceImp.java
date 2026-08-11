@@ -36,6 +36,7 @@ public class UserServiceImp implements UserService{
             return null;
         }
         if(BCrypt.checkpw(password, storedPassword)) {
+            user.setPassword(null);
             return user;
         }
         return null;
@@ -60,6 +61,10 @@ public class UserServiceImp implements UserService{
         }
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPassword(hashedPassword);
-        return userDAO.register(user);
+        User createdUser = userDAO.register(user);
+        if(createdUser != null) {
+            createdUser.setPassword(null);
+        }
+        return createdUser;
     }
 }

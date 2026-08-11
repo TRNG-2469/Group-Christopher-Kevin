@@ -4,7 +4,7 @@ import com.rev.ers.enums.Role;
 
 import java.util.Objects;
 
-public abstract class User {
+public class User {
     private int userId;
     private String username;
     private String password;

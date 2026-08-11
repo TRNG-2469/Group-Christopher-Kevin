@@ -40,7 +40,12 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
 
     @Override
     public List<Reimbursement> queryReimbursements(Status status, Integer departmentId) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM reimbursements WHERE 1 = 1");
+        StringBuilder sql = new StringBuilder("""
+        SELECT r.*
+        FROM reimbursements r
+        JOIN users u ON r.author_id = u.id
+        WHERE 1 = 1
+        """);
         if (status != null) {
             sql.append(" AND status = ?");
         }
@@ -136,8 +141,8 @@ public class ReimbursementDAOImp implements ReimbursementDAO{
         int reimbursementID = result.getInt(1);
         double amount = result.getDouble(2);
         String description = result.getString(3);
-        Type type = Type.valueOf(result.getString(4));
-        Status status = Status.valueOf(result.getString(5));
+        Type type = Type.fromDbValue(result.getString(4));
+        Status status = Status.fromDbValue(result.getString(5));
         int author = result.getInt(6);
         int resolver = result.getInt(7);
         return new Reimbursement(reimbursementID, amount, description, type, status, author, resolver);
