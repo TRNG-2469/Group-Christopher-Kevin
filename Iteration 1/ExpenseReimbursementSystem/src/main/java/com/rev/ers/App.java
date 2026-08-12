@@ -26,17 +26,26 @@ public class App {
         DepartmentHandler departmentHandler = new DepartmentHandlerImp(departmentService);
         ReimbursementHandler reimbursementHandler = new ReimbursementHandlerImp(reimbursementService);
 
-        Javalin app = Javalin.create().start(7000);
+        Javalin app = Javalin.create(config -> {config.staticFiles.add("/pages");}).start(7000);
 
         app.before(ctx -> {
             logger.info("Attempting request - Method: {} | Path: {}", ctx.method(), ctx.path());
         });
 
-        app.get("/", ctx -> ctx.result("Hello World"));
+        app.get("/", ctx -> ctx.redirect("/login.html"));
 
         app.post("/register", userHandler::register);
         app.post("/login", userHandler::login);
         app.post("/logout", userHandler::logout);
+
+        app.get("/user", ctx -> {
+            User user = ctx.sessionAttribute("user");
+            if (user == null) {
+                ctx.status(401).result("Not logged in.");
+                return;
+            }
+            ctx.json(user);
+        });
 
         app.get("/departments/{id}", departmentHandler::findDepartmentById);
         app.get("/departments", departmentHandler::findAll);
