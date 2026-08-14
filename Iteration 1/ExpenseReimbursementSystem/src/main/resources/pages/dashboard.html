@@ -126,14 +126,25 @@
                     const results = document.getElementById("myReimbursements");
                     results.innerHTML = "";
                     reimbursements.forEach(reimbursement => {
-                        const item = document.createElement("p");
-                        item.textContent =
+                        const item = document.createElement("div");
+                        item.style.marginBottom = "10px";
+                        const info = document.createElement("span");
+                        info.textContent =
                             "ID: " + reimbursement.reimbursementId +
                             " | Amount: $" + reimbursement.amount +
                             " | Description: " + reimbursement.description +
                             " | Type: " + reimbursement.type +
                             " | Status: " + reimbursement.status;
-
+                        item.appendChild(info);
+                        if (reimbursement.status === "PENDING") {
+                            const editButton = document.createElement("button");
+                            editButton.textContent = "Edit";
+                            editButton.style.marginLeft = "10px";
+                            editButton.addEventListener("click", () => {
+                                showEditForm(reimbursement, item);
+                            });
+                            item.appendChild(editButton);
+                        }
                         results.appendChild(item);
                     });
                 } catch (error) {
@@ -165,14 +176,132 @@
                 const results = document.getElementById("allReimbursements");
                 results.innerHTML = "";
                 reimbursements.forEach(reimbursement => {
-                    const item = document.createElement("p");
-                    item.textContent =
+                    const item = document.createElement("div");
+                    item.style.display = "flex";
+                    item.style.justifyContent = "space-between";
+                    item.style.alignItems = "center";
+                    item.style.marginBottom = "10px";
+                    const info = document.createElement("span");
+                    info.textContent =
                         "ID: " + reimbursement.reimbursementId +
                         " | Amount: $" + reimbursement.amount +
                         " | Type: " + reimbursement.type +
                         " | Status: " + reimbursement.status +
                         " | Author ID: " + reimbursement.authorId;
+                    item.appendChild(info);
+                    if (reimbursement.status === "PENDING") {
+                        const buttons = document.createElement("div");
+                        const approveButton = document.createElement("button");
+                        approveButton.textContent = "Approve";
+                        approveButton.addEventListener("click", () => {
+                            resolveReimbursement(
+                                reimbursement.reimbursementId,
+                                "APPROVED"
+                            );
+                        });
+                        const denyButton = document.createElement("button");
+                        denyButton.textContent = "Deny";
+                        denyButton.addEventListener("click", () => {
+                            resolveReimbursement(
+                                reimbursement.reimbursementId,
+                                "DENIED"
+                            );
+                        });
+                        buttons.appendChild(approveButton);
+                        buttons.appendChild(denyButton);
+                        item.appendChild(buttons);
+                    }
                     results.appendChild(item);
+                });
+            }
+
+            async function submitReimbursement(event) {
+                event.preventDefault();
+                const reimbursement = {
+                    amount: parseFloat(document.getElementById("amount").value),
+                    description: document.getElementById("description").value,
+                    type: document.getElementById("type").value
+                };
+                try {
+                    const response = await fetch("/reimbursements", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(reimbursement)
+                    });
+                    const message = document.getElementById("reimbursementMessage");
+                    if (response.ok) {
+                        message.textContent = "Reimbursement submitted successfully!";
+                        document.getElementById("reimbursementForm").reset();
+                        viewReimbursements();
+                    } else {
+                        const error = await response.text();
+                        message.textContent = "Failed to submit reimbursement: " + error;
+                    }
+                } catch (error) {
+                    console.error("Submit failed:", error);
+                    document.getElementById("reimbursementMessage").textContent = "Error submitting reimbursement.";
+                }
+            }
+
+            async function resolveReimbursement(reimbursementId, status) {
+                const response = await fetch(
+                    "/manager/reimbursements/" + reimbursementId,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            status: status
+                        })
+                    }
+                );
+                if (!response.ok) {
+                    alert("Unable to update reimbursement.");
+                    return;
+                }
+                viewAllReimbursements();
+            }
+
+            function showEditForm(reimbursement, item) {
+                item.innerHTML = "";
+                const form = document.createElement("div");
+                form.innerHTML = `
+                    <div>
+                        <label>Amount:</label>
+                        <input type="number" id="editAmount"
+                               value="${reimbursement.amount}"
+                               step="0.01" min="0">
+                    </div>
+
+                    <div>
+                        <label>Description:</label>
+                        <input type="text" id="editDescription"
+                               value="${reimbursement.description}">
+                    </div>
+
+                    <div>
+                        <label>Type:</label>
+                        <select id="editType">
+                            <option value="FOOD">Food</option>
+                            <option value="LODGING">Lodging</option>
+                            <option value="TRAVEL">Travel</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+
+                    <button id="saveEdit">Save</button>
+                    <button id="cancelEdit">Cancel</button>
+                `;
+                item.appendChild(form);
+                document.getElementById("editType").value = reimbursement.type;
+                document.getElementById("saveEdit").addEventListener("click", () => {
+                    updateReimbursement(reimbursement);
+                });
+                document.getElementById("cancelEdit").addEventListener("click", () => {
+                    viewReimbursements();
                 });
             }
 
@@ -189,6 +318,7 @@
             document.getElementById("loadMyReimbursements").addEventListener("click", viewReimbursements);
             document.getElementById("logoutButton").addEventListener("click", logout);
             document.getElementById("loadAllReimbursements").addEventListener("click", viewAllReimbursements);
+            document.getElementById("reimbursementForm").addEventListener("submit", submitReimbursement);
         </script>
     </body>
 </html>
