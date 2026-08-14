@@ -21,8 +21,7 @@ public class ReimbursementHandlerImp implements ReimbursementHandler {
     public void createReimbursement(Context ctx) {
         User author = ctx.sessionAttribute("user");
         Reimbursement reimbursement = ctx.bodyAsClass(Reimbursement.class);
-        reimbursementService.createReimbursement(reimbursement, author);
-        ctx.status(201).result("Reimbursement created successfully.");
+        ctx.status(201).json(reimbursementService.createReimbursement(reimbursement, author));
     }
 
     // Read
@@ -40,11 +39,7 @@ public class ReimbursementHandlerImp implements ReimbursementHandler {
             }
         }
         List<Reimbursement> reimbursements = reimbursementService.queryReimbursements(status, departmentId);
-        if (!reimbursements.isEmpty()) {
-            ctx.status(200).json(reimbursements);
-        } else {
-            ctx.status(200).result("No reimbursements found.");
-        }
+        ctx.status(200).json(reimbursements);
     }
 
     @Override
@@ -60,11 +55,7 @@ public class ReimbursementHandlerImp implements ReimbursementHandler {
             }
         }
         List<Reimbursement> reimbursements = reimbursementService.queryReimbursementsByAuthorId(authorId, status);
-        if (!reimbursements.isEmpty()) {
-            ctx.status(200).json(reimbursements);
-        } else {
-            ctx.status(200).result("No reimbursements found.");
-        }
+        ctx.status(200).json(reimbursements);
     }
 
     // Update
